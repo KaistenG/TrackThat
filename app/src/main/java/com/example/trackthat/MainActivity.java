@@ -5,6 +5,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.util.Calendar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -37,9 +38,19 @@ public class MainActivity extends AppCompatActivity {
 
         updateMonthLabel();
 
+        TextView buttonToday = findViewById(R.id.buttonToday);
+        Calendar today = Calendar.getInstance();
+        buttonToday.setText(String.valueOf(today.get(Calendar.DAY_OF_MONTH)));
+
+        buttonToday.setOnClickListener(v -> {
+            calendarView.jumpToToday();
+            updateMonthLabel();
+        });
+
         calendarView.setOnDayClickListener((y, m, d) -> {
             Toast.makeText(this, "Tag: " + d + "." + (m + 1) + "." + y, Toast.LENGTH_SHORT).show();
         });
+
         btnPrev.setOnClickListener(v -> {
             calendarView.previousMonth();
             updateMonthLabel();

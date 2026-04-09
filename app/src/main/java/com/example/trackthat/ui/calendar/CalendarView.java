@@ -138,4 +138,10 @@ public class CalendarView extends View {
         }
         return true;
     }
+    public void jumpToToday() {
+        Calendar today = Calendar.getInstance();
+        year = today.get(Calendar.YEAR);
+        month = today.get(Calendar.MONTH);
+        invalidate();
+    }
 }
