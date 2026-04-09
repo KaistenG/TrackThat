@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "470827228843",
+    "project_id": "trackthat-13564",
+    "storage_bucket": "trackthat-13564.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:470827228843:android:47b3a2f1777b848011e1ee",
+        "android_client_info": {
+          "package_name": "com.example.trackthat"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLHBrQTUJgneWyqAhmAYknx6VSgNlylvI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
