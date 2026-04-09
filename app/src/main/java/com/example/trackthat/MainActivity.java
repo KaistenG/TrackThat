@@ -1,92 +1,59 @@
 package com.example.trackthat;
 
 import android.os.Bundle;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import java.util.Calendar;
-import com.example.trackthat.ui.calendar.DayBottomSheet;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.trackthat.ui.calendar.CalendarView;
-import com.example.trackthat.ui.calendar.DayBottomSheet;
+import com.example.trackthat.ui.calendar.CalendarFragment;
 import com.example.trackthat.ui.habits.HabitsFragment;
 import com.example.trackthat.ui.stats.StatsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import java.text.DateFormatSymbols;
-import java.util.Locale;
-
 public class MainActivity extends AppCompatActivity {
 
-    private FrameLayout fragmentContainer;
-    private CalendarView calendarView;
-    private TextView textViewMonth;
+    private BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        calendarView = findViewById(R.id.calendarView);
-        textViewMonth = findViewById(R.id.textViewMonth);
-        fragmentContainer = findViewById(R.id.fragmentContainer);
+        bottomNav = findViewById(R.id.bottomNavigation);
 
-        ImageButton btnPrev = findViewById(R.id.buttonPreviousMonth);
-        ImageButton btnNext = findViewById(R.id.buttonNextMonth);
+        // Kalender als Startansicht
+        showFragment(new CalendarFragment());
 
-        updateMonthLabel();
-
-        TextView buttonToday = findViewById(R.id.buttonToday);
-        Calendar today = Calendar.getInstance();
-        buttonToday.setText(String.valueOf(today.get(Calendar.DAY_OF_MONTH)));
-
-        buttonToday.setOnClickListener(v -> {
-            calendarView.jumpToToday();
-            updateMonthLabel();
-        });
-
-        calendarView.setOnDayClickListener((y, m, d) -> {
-            DayBottomSheet sheet = DayBottomSheet.newInstance(y, m, d);
-            sheet.show(getSupportFragmentManager(), "DayBottomSheet");
-        });
-
-        btnPrev.setOnClickListener(v -> {
-            calendarView.previousMonth();
-            updateMonthLabel();
-
-        });
-
-        btnNext.setOnClickListener(v -> {
-            calendarView.nextMonth();
-            updateMonthLabel();
-        });
-
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
+
+            // Wenn bereits ein nicht-Kalender Fragment aktiv ist -> zurück zum Kalender
+            Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+            if (!(current instanceof CalendarFragment)) {
+                showFragment(new CalendarFragment());
+                bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
+                bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
+                bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Statistiken");
+                bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_menu_report_image);
+                return false;
+            }
+
             if (id == R.id.nav_habits) {
                 showFragment(new HabitsFragment());
+                item.setTitle("Zurück");
+                item.setIcon(android.R.drawable.ic_media_previous);
                 return true;
             } else if (id == R.id.nav_stats) {
                 showFragment(new StatsFragment());
+                item.setTitle("Zurück");
+                item.setIcon(android.R.drawable.ic_media_previous);
                 return true;
             }
             return false;
         });
     }
 
-    private void updateMonthLabel() {
-        String[] months = new DateFormatSymbols(Locale.GERMAN).getMonths();
-        String monthName = months[calendarView.getMonth()];
-        monthName = monthName.substring(0, 1).toUpperCase() + monthName.substring(1);
-        textViewMonth.setText(monthName + " " + calendarView.getYear());
-    }
-
     private void showFragment(Fragment fragment) {
-        fragmentContainer.setVisibility(android.view.View.VISIBLE);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)

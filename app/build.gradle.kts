@@ -46,4 +46,6 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.7.0")) //alte version mit keinen Kotlin Laufzeitabhängigkeiten
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+
+    implementation("com.github.skydoves:colorpickerview:2.2.4") //Farbrad
 }

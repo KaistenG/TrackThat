@@ -32,29 +32,38 @@ public class DayPreviewView extends View {
         super.onDraw(canvas);
         int w = getWidth();
         int h = getHeight();
-        int stripeWidth = 12;
+        int stripeWidth = (int) (w * 0.05f);
+        int verticalIndex = 0;
+        int horizontalIndex = 0;
 
+        // Erst alle vertikalen Streifen
         for (Habit habit : activeHabits) {
+            if (!habit.getVisualType().equals("VERTICAL")) continue;
+            paint.setStyle(Paint.Style.FILL);
             paint.setColor(habit.getColor());
-            switch (habit.getVisualType()) {
-                case "VERTICAL":
-                    // wird dynamisch nebeneinander gezeichnet
-                    int vIndex = activeHabits.indexOf(habit);
-                    int vX = vIndex * (stripeWidth + 4) + 4;
-                    canvas.drawRect(vX, 0, vX + stripeWidth, h, paint);
-                    break;
-                case "HORIZONTAL":
-                    int hIndex = activeHabits.indexOf(habit);
-                    int hY = hIndex * (stripeWidth + 4) + 4;
-                    canvas.drawRect(0, hY, w, hY + stripeWidth, paint);
-                    break;
-                case "BORDER":
-                    paint.setStyle(Paint.Style.STROKE);
-                    paint.setStrokeWidth(6);
-                    canvas.drawRect(3, 3, w - 3, h - 3, paint);
-                    paint.setStyle(Paint.Style.FILL);
-                    break;
-            }
+            int vX = (int) (w * 0.15f * (verticalIndex + 1));
+            canvas.drawRect(vX, 0, vX + stripeWidth, h, paint);
+            verticalIndex++;
+        }
+
+        // Dann alle horizontalen Streifen
+        for (Habit habit : activeHabits) {
+            if (!habit.getVisualType().equals("HORIZONTAL")) continue;
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(habit.getColor());
+            int hY = (int) (h * 0.15f * (horizontalIndex + 1));
+            canvas.drawRect(0, hY, w, hY + stripeWidth, paint);
+            horizontalIndex++;
+        }
+
+        // Border immer zuletzt (oben drüber)
+        for (Habit habit : activeHabits) {
+            if (!habit.getVisualType().equals("BORDER")) continue;
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(habit.getColor());
+            paint.setStrokeWidth(24);
+            canvas.drawRect(4, 4, w - 4, h - 4, paint);
+            paint.setStyle(Paint.Style.FILL);
         }
     }
 }

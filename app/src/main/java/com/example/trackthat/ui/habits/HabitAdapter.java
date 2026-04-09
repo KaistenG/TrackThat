@@ -1,4 +1,4 @@
-package com.example.trackthat.ui.calendar;
+package com.example.trackthat.ui.habits;
 
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -15,17 +15,16 @@ import com.example.trackthat.model.Habit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HabitToggleAdapter extends RecyclerView.Adapter<HabitToggleAdapter.ViewHolder> {
+public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.ViewHolder> {
 
-    public interface OnHabitToggleListener {
-        void onToggle(Habit habit, boolean isActive);
+    public interface OnHabitClickListener {
+        void onHabitClick(Habit habit);
     }
 
     private List<Habit> habits = new ArrayList<>();
-    private List<String> activeHabitIds = new ArrayList<>();
-    private OnHabitToggleListener listener;
+    private OnHabitClickListener listener;
 
-    public HabitToggleAdapter(OnHabitToggleListener listener) {
+    public HabitAdapter(OnHabitClickListener listener) {
         this.listener = listener;
     }
 
@@ -34,36 +33,38 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<HabitToggleAdapter.
         notifyDataSetChanged();
     }
 
-    public void setActiveHabitIds(List<String> ids) {
-        this.activeHabitIds = ids;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_habit_toggle, parent, false);
+                .inflate(R.layout.item_habit, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Habit habit = habits.get(position);
-        boolean isActive = activeHabitIds.contains(habit.getId());
 
         holder.textViewName.setText(habit.getName());
+
+        switch (habit.getVisualType()) {
+            case "VERTICAL":
+                holder.textViewVisualType.setText("Vertikaler Streifen");
+                break;
+            case "HORIZONTAL":
+                holder.textViewVisualType.setText("Horizontaler Streifen");
+                break;
+            case "BORDER":
+                holder.textViewVisualType.setText("Umrandung");
+                break;
+        }
 
         GradientDrawable circle = new GradientDrawable();
         circle.setShape(GradientDrawable.OVAL);
         circle.setColor(habit.getColor());
         holder.colorIndicator.setBackground(circle);
 
-        holder.itemView.setAlpha(isActive ? 1.0f : 0.4f);
-
-        holder.itemView.setOnClickListener(v -> {
-            listener.onToggle(habit, !isActive);
-        });
+        holder.itemView.setOnClickListener(v -> listener.onHabitClick(habit));
     }
 
     @Override
@@ -73,11 +74,13 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<HabitToggleAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
+        TextView textViewVisualType;
         View colorIndicator;
 
         ViewHolder(View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.textViewHabitName);
+            textViewVisualType = itemView.findViewById(R.id.textViewVisualType);
             colorIndicator = itemView.findViewById(R.id.colorIndicator);
         }
     }
