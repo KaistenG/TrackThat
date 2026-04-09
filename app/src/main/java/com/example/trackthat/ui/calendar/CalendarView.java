@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.MotionEvent;
 
 import java.util.Calendar;
 
@@ -102,4 +103,39 @@ public class CalendarView extends View {
 
     public int getYear() { return year; }
     public int getMonth() { return month; }
+
+    public interface OnDayClickListener {
+        void onDayClick(int year, int month, int day);
+    }
+
+    private OnDayClickListener dayClickListener;
+
+    public void setOnDayClickListener(OnDayClickListener listener) {
+        this.dayClickListener = listener;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            int x = (int) event.getX();
+            int y = (int) event.getY() - headerHeight;
+
+            if (y < 0) return true; // Tipp auf Header ignorieren
+
+            int col = x / cellSize;
+            int row = y / cellSize;
+            int index = row * columns + col;
+
+            Calendar cal = Calendar.getInstance();
+            cal.set(year, month, 1);
+            int firstDayOfWeek = (cal.get(Calendar.DAY_OF_WEEK) + 5) % 7;
+            int day = index - firstDayOfWeek + 1;
+
+            int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            if (day >= 1 && day <= daysInMonth && dayClickListener != null) {
+                dayClickListener.onDayClick(year, month, day);
+            }
+        }
+        return true;
+    }
 }
