@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import java.util.Calendar;
+import com.example.trackthat.ui.calendar.DayBottomSheet;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.trackthat.ui.calendar.CalendarView;
+import com.example.trackthat.ui.calendar.DayBottomSheet;
 import com.example.trackthat.ui.habits.HabitsFragment;
 import com.example.trackthat.ui.stats.StatsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
         calendarView.setOnDayClickListener((y, m, d) -> {
-            Toast.makeText(this, "Tag: " + d + "." + (m + 1) + "." + y, Toast.LENGTH_SHORT).show();
+            DayBottomSheet sheet = DayBottomSheet.newInstance(y, m, d);
+            sheet.show(getSupportFragmentManager(), "DayBottomSheet");
         });
 
         btnPrev.setOnClickListener(v -> {
