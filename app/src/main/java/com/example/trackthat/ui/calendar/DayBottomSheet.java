@@ -30,6 +30,7 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
     private DayPreviewView dayPreviewView;
     private List<Habit> allHabits = new ArrayList<>();
     private List<String> activeHabitIds = new ArrayList<>();
+    private TextView buttonClearAll;
     private String dateString;
 
     public static DayBottomSheet newInstance(int year, int month, int day) {
@@ -66,6 +67,25 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
         dateLabel.setText(day + "." + (month + 1) + "." + year);
 
         dayPreviewView = view.findViewById(R.id.dayPreviewView);
+
+        buttonClearAll = view.findViewById(R.id.buttonClearAll);
+        buttonClearAll.setOnClickListener(v -> {
+            if (activeHabitIds.isEmpty()) return;
+            for (String habitId : new ArrayList<>(activeHabitIds)) {
+                repository.toggleEntry(habitId, dateString, new HabitRepository.OnSuccessListener() {
+                    @Override
+                    public void onSuccess() {
+                        activeHabitIds.remove(habitId);
+                        adapter.setActiveHabitIds(activeHabitIds);
+                        updateClearButton();
+                        updatePreview();
+                    }
+
+                    @Override
+                    public void onFailure(String error) {}
+                });
+            }
+        });
 
         adapter = new HabitToggleAdapter((habit, isActive) -> {
             repository.toggleEntry(habit.getId(), dateString, new HabitRepository.OnSuccessListener() {
@@ -134,5 +154,13 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
             }
         }
         dayPreviewView.setActiveHabits(activeHabits);
+        updateClearButton();
+    }
+    private void updateClearButton() {
+        if (activeHabitIds.isEmpty()) {
+            buttonClearAll.setTextColor(0xFFCCCCCC);
+        } else {
+            buttonClearAll.setTextColor(0xFFE53935);
+        }
     }
 }

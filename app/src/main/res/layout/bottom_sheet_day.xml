@@ -14,13 +14,30 @@
         android:id="@+id/textViewSelectedDate"
         android:layout_marginBottom="12dp"/>
 
-    <com.example.trackthat.ui.calendar.DayPreviewView
-        android:id="@+id/dayPreviewView"
-        android:layout_width="92dp"
-        android:layout_height="92dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="16dp"
-        android:background="#FFEEEEEE"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
+
+        <com.example.trackthat.ui.calendar.DayPreviewView
+            android:id="@+id/dayPreviewView"
+            android:layout_width="92dp"
+            android:layout_height="92dp"
+            android:layout_gravity="center"
+            android:background="#FFEEEEEE"/>
+
+        <TextView
+            android:id="@+id/buttonClearAll"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="108dp"
+            android:text="✕"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="#FFCCCCCC"/>
+
+    </FrameLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewHabits"
