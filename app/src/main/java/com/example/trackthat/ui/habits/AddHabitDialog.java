@@ -16,6 +16,8 @@ import androidx.fragment.app.DialogFragment;
 import com.example.trackthat.R;
 import com.example.trackthat.model.Habit;
 
+import android.widget.CheckBox;
+
 public class AddHabitDialog extends DialogFragment {
 
     public interface OnHabitAddedListener {
@@ -38,6 +40,7 @@ public class AddHabitDialog extends DialogFragment {
 
         EditText editTextName = view.findViewById(R.id.editTextHabitName);
         RadioGroup radioGroup = view.findViewById(R.id.radioGroupVisualType);
+        CheckBox checkBoxStreakable = view.findViewById(R.id.checkBoxStreakable);
         GridLayout colorGrid = view.findViewById(R.id.colorGrid);
 
         // Farbauswahl verdrahten
@@ -75,7 +78,7 @@ public class AddHabitDialog extends DialogFragment {
                         visualType = "VERTICAL";
                     }
 
-                    Habit habit = new Habit(null, name, selectedColor, visualType);
+                    Habit habit = new Habit(null, name, selectedColor, visualType, checkBoxStreakable.isChecked());
                     if (listener != null) listener.onHabitAdded(habit);
                 })
                 .setNegativeButton("Abbrechen", null)

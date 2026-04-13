@@ -2,13 +2,54 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Statistiken"
-        android:textSize="20sp"/>
+        android:id="@+id/cardCurrentMonth"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginBottom="12dp"
+        android:background="#FFEEEEEE"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:text="📅 Aktueller Monat"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/cardAverage"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginBottom="12dp"
+        android:background="#FFEEEEEE"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:text="📊 Durchschnittsmonat"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/cardTopMonth"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_marginBottom="12dp"
+        android:background="#FFEEEEEE"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:text="🏆 Topmonat"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/cardStreaks"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#FFEEEEEE"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:text="🔥 Streaks"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
 
 </LinearLayout>

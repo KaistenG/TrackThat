@@ -6,13 +6,16 @@ public class Habit {
     private int color;
     private String visualType; // "VERTICAL", "HORIZONTAL", "BORDER"
 
+    private boolean streakable; //für sinnvolle Streaks
+
     public Habit() {} // Pflicht für Firestore
 
-    public Habit(String id, String name, int color, String visualType) {
+    public Habit(String id, String name, int color, String visualType, boolean streakable) {
         this.id = id;
         this.name = name;
         this.color = color;
         this.visualType = visualType;
+        this.streakable = streakable;
     }
 
     public String getId() { return id; }
@@ -26,4 +29,7 @@ public class Habit {
 
     public String getVisualType() { return visualType; }
     public void setVisualType(String visualType) { this.visualType = visualType; }
+
+    public boolean isStreakable() { return streakable; }
+    public void setStreakable(boolean streakable) { this.streakable = streakable; }
 }

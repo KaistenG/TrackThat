@@ -47,5 +47,4 @@ dependencies {
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
 
-    implementation("com.github.skydoves:colorpickerview:2.2.4") //Farbrad
 }
