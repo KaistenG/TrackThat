@@ -10,6 +10,12 @@ import android.view.MotionEvent;
 
 import java.util.Calendar;
 
+import com.example.trackthat.model.Habit;
+import com.example.trackthat.model.HabitEntry;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 public class CalendarView extends View {
 
     private Paint paint;
@@ -20,6 +26,9 @@ public class CalendarView extends View {
 
     private int year;
     private int month;
+
+    private List<Habit> habits = new ArrayList<>();
+    private Map<String, List<Habit>> activeHabitsPerDay = new HashMap<>();
 
     public CalendarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -76,16 +85,57 @@ public class CalendarView extends View {
             int y = headerHeight + row * cellSize;
 
             // Zellhintergrund
-            paint.setColor(0xFFEEEEEE);
-            paint.setTypeface(Typeface.DEFAULT);
-            canvas.drawRect(x + 2, y + 2, x + cellSize - 2, y + cellSize - 2, paint);
+            Calendar today = Calendar.getInstance();
+            boolean isToday = today.get(Calendar.YEAR) == year
+                    && today.get(Calendar.MONTH) == month
+                    && today.get(Calendar.DAY_OF_MONTH) == day;
 
+            paint.setTypeface(Typeface.DEFAULT);
+            paint.setColor(isToday ? 0xFFD1C4E9 : 0xFFEEEEEE);
+            canvas.drawRect(x + 2, y + 2, x + cellSize - 2, y + cellSize - 2, paint);
             // Tageszahl oben rechts
             paint.setColor(0xFF333333);
             paint.setTextSize(24);
             String dayStr = String.valueOf(day);
             float textWidth = paint.measureText(dayStr);
             canvas.drawText(dayStr, x + cellSize - textWidth - 8, y + 28, paint);
+
+            // Streifen zeichnen
+            String dayKey = String.valueOf(day);
+            if (activeHabitsPerDay.containsKey(dayKey)) {
+                List<Habit> dayHabits = activeHabitsPerDay.get(dayKey);
+                int stripeWidth = (int) (cellSize * 0.05f);
+                int verticalIndex = 0;
+                int horizontalIndex = 0;
+
+                // Erst vertikale
+                for (Habit habit : dayHabits) {
+                    if (!habit.getVisualType().equals("VERTICAL")) continue;
+                    paint.setColor(habit.getColor());
+                    int vX = x + (int) (cellSize * 0.10f * (verticalIndex + 1));
+                    canvas.drawRect(vX, y + 2, vX + stripeWidth, y + cellSize - 2, paint);
+                    verticalIndex++;
+                }
+
+                // Dann horizontale
+                for (Habit habit : dayHabits) {
+                    if (!habit.getVisualType().equals("HORIZONTAL")) continue;
+                    paint.setColor(habit.getColor());
+                    int hY = y + (int) (cellSize * 0.10f * (horizontalIndex + 1));
+                    canvas.drawRect(x + 2, hY, x + cellSize - 2, hY + stripeWidth, paint);
+                    horizontalIndex++;
+                }
+
+                // Border zuletzt
+                for (Habit habit : dayHabits) {
+                    if (!habit.getVisualType().equals("BORDER")) continue;
+                    paint.setStyle(Paint.Style.STROKE);
+                    paint.setColor(habit.getColor());
+                    paint.setStrokeWidth(6);
+                    canvas.drawRect(x + 3, y + 3, x + cellSize - 3, y + cellSize - 3, paint);
+                    paint.setStyle(Paint.Style.FILL);
+                }
+            }
         }
     }
 
@@ -144,4 +194,24 @@ public class CalendarView extends View {
         month = today.get(Calendar.MONTH);
         invalidate();
     }
+
+    public void setMonthData(List<Habit> habits, List<HabitEntry> entries) {
+        this.habits = habits;
+        activeHabitsPerDay.clear();
+
+        for (HabitEntry entry : entries) {
+            String day = entry.getDate().substring(8); // "YYYY-MM-DD" -> "DD"
+            day = String.valueOf(Integer.parseInt(day)); // "09" -> "9"
+            if (!activeHabitsPerDay.containsKey(day)) {
+                activeHabitsPerDay.put(day, new ArrayList<>());
+            }
+            for (Habit habit : habits) {
+                if (habit.getId().equals(entry.getHabitId())) {
+                    activeHabitsPerDay.get(day).add(habit);
+                }
+            }
+        }
+        invalidate();
+    }
+
 }

@@ -5,6 +5,8 @@ import com.example.trackthat.model.HabitEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.firestore.ListenerRegistration;
+
 public class HabitRepository {
 
     private final FirebaseFirestore db;
@@ -78,6 +80,26 @@ public class HabitRepository {
                     listener.onLoaded(query.toObjects(HabitEntry.class));
                 })
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    public ListenerRegistration listenToHabits(OnHabitsLoadedListener listener) {
+        return db.collection("users").document(getUserId())
+                .collection("habits")
+                .addSnapshotListener((query, error) -> {
+                    if (error != null || query == null) return;
+                    listener.onLoaded(query.toObjects(Habit.class));
+                });
+    }
+
+    public ListenerRegistration listenToEntriesForMonth(String yearMonth, OnEntriesLoadedListener listener) {
+        return db.collection("users").document(getUserId())
+                .collection("entries")
+                .whereGreaterThanOrEqualTo("date", yearMonth + "-01")
+                .whereLessThanOrEqualTo("date", yearMonth + "-31")
+                .addSnapshotListener((query, error) -> {
+                    if (error != null || query == null) return;
+                    listener.onLoaded(query.toObjects(HabitEntry.class));
+                });
     }
 
     // Interfaces
