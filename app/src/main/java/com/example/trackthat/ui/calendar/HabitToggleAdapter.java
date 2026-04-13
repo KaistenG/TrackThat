@@ -10,18 +10,32 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trackthat.R;
+import com.example.trackthat.model.Group;
 import com.example.trackthat.model.Habit;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HabitToggleAdapter extends RecyclerView.Adapter<HabitToggleAdapter.ViewHolder> {
+public class HabitToggleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_HEADER = 0;
+    private static final int TYPE_HABIT = 1;
 
     public interface OnHabitToggleListener {
         void onToggle(Habit habit, boolean isActive);
     }
 
-    private List<Habit> habits = new ArrayList<>();
+    private static class ListItem {
+        Group group;
+        Habit habit;
+
+        ListItem(Group group) { this.group = group; }
+        ListItem(Habit habit) { this.habit = habit; }
+
+        boolean isHeader() { return group != null; }
+    }
+
+    private List<ListItem> items = new ArrayList<>();
     private List<String> activeHabitIds = new ArrayList<>();
     private OnHabitToggleListener listener;
 
@@ -29,8 +43,31 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<HabitToggleAdapter.
         this.listener = listener;
     }
 
-    public void setHabits(List<Habit> habits) {
-        this.habits = habits;
+    public void setData(List<Group> groups, List<Habit> habits) {
+        items.clear();
+
+        // Habits ohne Gruppe
+        List<Habit> ungrouped = new ArrayList<>();
+        for (Habit habit : habits) {
+            if (habit.getGroupId() == null) ungrouped.add(habit);
+        }
+        if (!ungrouped.isEmpty()) {
+            items.add(new ListItem(new Group(null, "Ohne Gruppe", -1)));
+            for (Habit habit : ungrouped) items.add(new ListItem(habit));
+        }
+
+        // Habits nach Gruppe
+        for (Group group : groups) {
+            List<Habit> groupHabits = new ArrayList<>();
+            for (Habit habit : habits) {
+                if (group.getId().equals(habit.getGroupId())) groupHabits.add(habit);
+            }
+            if (!groupHabits.isEmpty()) {
+                items.add(new ListItem(group));
+                for (Habit habit : groupHabits) items.add(new ListItem(habit));
+            }
+        }
+
         notifyDataSetChanged();
     }
 
@@ -39,43 +76,72 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<HabitToggleAdapter.
         notifyDataSetChanged();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return items.get(position).isHeader() ? TYPE_HEADER : TYPE_HABIT;
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_habit_toggle, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_HEADER) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_group_header, parent, false);
+            return new HeaderViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_habit_toggle, parent, false);
+            return new HabitViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Habit habit = habits.get(position);
-        boolean isActive = activeHabitIds.contains(habit.getId());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof HeaderViewHolder) {
+            ((HeaderViewHolder) holder).textViewGroupName
+                    .setText(items.get(position).group.getName());
+        } else {
+            Habit habit = items.get(position).habit;
+            HabitViewHolder habitHolder = (HabitViewHolder) holder;
+            boolean isActive = activeHabitIds.contains(habit.getId());
 
-        holder.textViewName.setText(habit.getName());
+            habitHolder.textViewName.setText(habit.getName());
 
-        GradientDrawable circle = new GradientDrawable();
-        circle.setShape(GradientDrawable.OVAL);
-        circle.setColor(habit.getColor());
-        holder.colorIndicator.setBackground(circle);
+            GradientDrawable circle = new GradientDrawable();
+            circle.setShape(GradientDrawable.OVAL);
+            circle.setColor(habit.getColor());
+            habitHolder.colorIndicator.setBackground(circle);
 
-        holder.itemView.setAlpha(isActive ? 1.0f : 0.4f);
-
-        holder.itemView.setOnClickListener(v -> {
-            listener.onToggle(habit, !isActive);
-        });
+            habitHolder.itemView.setAlpha(isActive ? 1.0f : 0.4f);
+            habitHolder.itemView.setOnClickListener(v ->
+                    listener.onToggle(habit, !isActive));
+        }
     }
 
     @Override
-    public int getItemCount() {
-        return habits.size();
+    public int getItemCount() { return items.size(); }
+
+    // Alle Habits aus der aktuellen Liste holen (für updatePreview)
+    public List<Habit> getAllHabits() {
+        List<Habit> habits = new ArrayList<>();
+        for (ListItem item : items) {
+            if (!item.isHeader()) habits.add(item.habit);
+        }
+        return habits;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    static class HeaderViewHolder extends RecyclerView.ViewHolder {
+        TextView textViewGroupName;
+        HeaderViewHolder(View itemView) {
+            super(itemView);
+            textViewGroupName = itemView.findViewById(R.id.textViewGroupName);
+        }
+    }
+
+    static class HabitViewHolder extends RecyclerView.ViewHolder {
         TextView textViewName;
         View colorIndicator;
-
-        ViewHolder(View itemView) {
+        HabitViewHolder(View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.textViewHabitName);
             colorIndicator = itemView.findViewById(R.id.colorIndicator);

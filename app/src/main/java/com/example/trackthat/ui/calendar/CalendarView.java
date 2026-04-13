@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import java.util.Collections;
+
 public class CalendarView extends View {
 
     private Paint paint;
@@ -102,38 +105,48 @@ public class CalendarView extends View {
 
             // Streifen zeichnen
             String dayKey = String.valueOf(day);
-            if (activeHabitsPerDay.containsKey(dayKey)) {
-                List<Habit> dayHabits = activeHabitsPerDay.get(dayKey);
-                int stripeWidth = (int) (cellSize * 0.05f);
-                int verticalIndex = 0;
-                int horizontalIndex = 0;
+            List<Habit> dayActiveHabits = activeHabitsPerDay.containsKey(dayKey)
+                    ? activeHabitsPerDay.get(dayKey) : new ArrayList<>();
 
-                // Erst vertikale
-                for (Habit habit : dayHabits) {
-                    if (!habit.getVisualType().equals("VERTICAL")) continue;
-                    paint.setColor(habit.getColor());
-                    int vX = x + (int) (cellSize * 0.10f * (verticalIndex + 1));
-                    canvas.drawRect(vX, y + 2, vX + stripeWidth, y + cellSize - 2, paint);
-                    verticalIndex++;
+            int stripeWidth = (int) (cellSize * 0.06f);
+            int verticalIndex = 0;
+            int horizontalIndex = 0;
+
+            // Alle Habits durchgehen - position bleibt fix
+            for (Habit habit : habits) {
+                boolean isActive = false;
+                for (Habit active : dayActiveHabits) {
+                    if (active.getId().equals(habit.getId())) {
+                        isActive = true;
+                        break;
+                    }
                 }
 
-                // Dann horizontale
-                for (Habit habit : dayHabits) {
-                    if (!habit.getVisualType().equals("HORIZONTAL")) continue;
-                    paint.setColor(habit.getColor());
-                    int hY = y + (int) (cellSize * 0.10f * (horizontalIndex + 1));
-                    canvas.drawRect(x + 2, hY, x + cellSize - 2, hY + stripeWidth, paint);
-                    horizontalIndex++;
+                if (!isActive) {
+                    if (habit.getVisualType().equals("VERTICAL")) verticalIndex++;
+                    else if (habit.getVisualType().equals("HORIZONTAL")) horizontalIndex++;
+                    continue;
                 }
 
-                // Border zuletzt
-                for (Habit habit : dayHabits) {
-                    if (!habit.getVisualType().equals("BORDER")) continue;
-                    paint.setStyle(Paint.Style.STROKE);
-                    paint.setColor(habit.getColor());
-                    paint.setStrokeWidth(6);
-                    canvas.drawRect(x + 3, y + 3, x + cellSize - 3, y + cellSize - 3, paint);
-                    paint.setStyle(Paint.Style.FILL);
+                paint.setColor(habit.getColor());
+
+                switch (habit.getVisualType()) {
+                    case "VERTICAL":
+                        int vX = x + (int) (cellSize * 0.10f * (verticalIndex + 1));
+                        canvas.drawRect(vX, y + 2, vX + stripeWidth, y + cellSize - 2, paint);
+                        verticalIndex++;
+                        break;
+                    case "HORIZONTAL":
+                        int hY = y + (int) (cellSize * 0.10f * (horizontalIndex + 1));
+                        canvas.drawRect(x + 2, hY, x + cellSize - 2, hY + stripeWidth, paint);
+                        horizontalIndex++;
+                        break;
+                    case "BORDER":
+                        paint.setStyle(Paint.Style.STROKE);
+                        paint.setStrokeWidth(6);
+                        canvas.drawRect(x + 3, y + 3, x + cellSize - 3, y + cellSize - 3, paint);
+                        paint.setStyle(Paint.Style.FILL);
+                        break;
                 }
             }
         }
@@ -196,16 +209,18 @@ public class CalendarView extends View {
     }
 
     public void setMonthData(List<Habit> habits, List<HabitEntry> entries) {
-        this.habits = habits;
+        // Habits nach order sortieren
+        this.habits = new ArrayList<>(habits);
+        Collections.sort(this.habits, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
+
         activeHabitsPerDay.clear();
 
         for (HabitEntry entry : entries) {
-            String day = entry.getDate().substring(8); // "YYYY-MM-DD" -> "DD"
-            day = String.valueOf(Integer.parseInt(day)); // "09" -> "9"
+            String day = String.valueOf(Integer.parseInt(entry.getDate().substring(8)));
             if (!activeHabitsPerDay.containsKey(day)) {
                 activeHabitsPerDay.put(day, new ArrayList<>());
             }
-            for (Habit habit : habits) {
+            for (Habit habit : this.habits) {
                 if (habit.getId().equals(entry.getHabitId())) {
                     activeHabitsPerDay.get(day).add(habit);
                 }
