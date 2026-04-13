@@ -1,0 +1,144 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="z.B. Muay Thai"
+            android:inputType="textCapSentences"
+            android:layout_marginBottom="24dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gruppe"
+                android:textStyle="bold"
+                android:textSize="16sp"/>
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fabAddGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/ic_input_add"
+                app:fabSize="mini"/>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewGroups"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Visualisierung"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <RadioGroup
+            android:id="@+id/radioGroupVisualType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
+
+            <RadioButton
+                android:id="@+id/radioVertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vertikaler Streifen"
+                android:checked="true"
+                android:padding="8dp"/>
+
+            <RadioButton
+                android:id="@+id/radioHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Horizontaler Streifen"
+                android:padding="8dp"/>
+
+            <RadioButton
+                android:id="@+id/radioBorder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Umrandung"
+                android:padding="8dp"/>
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Farbe"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp"/>
+
+        <GridLayout
+            android:id="@+id/colorGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="6"
+            android:rowCount="2"
+            android:layout_marginBottom="24dp">
+
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FFEB3B" android:tag="#FFEB3B"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#8BC34A" android:tag="#8BC34A"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#00BCD4" android:tag="#00BCD4"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#2196F3" android:tag="#2196F3"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF9800" android:tag="#FF9800"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#E91E63" android:tag="#E91E63"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#F44336" android:tag="#F44336"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#4CAF50" android:tag="#4CAF50"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#9C27B0" android:tag="#9C27B0"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#795548" android:tag="#795548"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#607D8B" android:tag="#607D8B"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#212121" android:tag="#212121"/>
+
+        </GridLayout>
+
+        <CheckBox
+            android:id="@+id/checkBoxStreakable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Streak verfolgen"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp"/>
+
+        <Button
+            android:id="@+id/buttonSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Speichern"/>
+
+    </LinearLayout>
+
+</ScrollView>

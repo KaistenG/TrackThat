@@ -7,6 +7,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.firestore.ListenerRegistration;
 
+import com.example.trackthat.model.Group;
+
 public class HabitRepository {
 
     private final FirebaseFirestore db;
@@ -38,6 +40,17 @@ public class HabitRepository {
     public void getHabits(OnHabitsLoadedListener listener) {
         db.collection("users").document(getUserId())
                 .collection("habits")
+                .get()
+                .addOnSuccessListener(query -> {
+                    listener.onLoaded(query.toObjects(Habit.class));
+                })
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    public void getHabitsSorted(OnHabitsLoadedListener listener) {
+        db.collection("users").document(getUserId())
+                .collection("habits")
+                .orderBy("order")
                 .get()
                 .addOnSuccessListener(query -> {
                     listener.onLoaded(query.toObjects(Habit.class));
@@ -91,6 +104,30 @@ public class HabitRepository {
                 })
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
+
+    public void addGroup(Group group, OnSuccessListener listener) {
+        String id = db.collection("users")
+                .document(getUserId())
+                .collection("groups")
+                .document().getId();
+        group.setId(id);
+        db.collection("users").document(getUserId())
+                .collection("groups").document(id)
+                .set(group)
+                .addOnSuccessListener(unused -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    public void getGroups(OnGroupsLoadedListener listener) {
+        db.collection("users").document(getUserId())
+                .collection("groups")
+                .orderBy("order")
+                .get()
+                .addOnSuccessListener(query -> {
+                    listener.onLoaded(query.toObjects(Group.class));
+                })
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
     public ListenerRegistration listenToHabits(OnHabitsLoadedListener listener) {
         return db.collection("users").document(getUserId())
                 .collection("habits")
@@ -124,6 +161,11 @@ public class HabitRepository {
 
     public interface OnEntriesLoadedListener {
         void onLoaded(java.util.List<HabitEntry> entries);
+        void onFailure(String error);
+    }
+
+    public interface OnGroupsLoadedListener {
+        void onLoaded(java.util.List<Group> groups);
         void onFailure(String error);
     }
 }

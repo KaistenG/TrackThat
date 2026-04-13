@@ -12,13 +12,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trackthat.R;
+import com.example.trackthat.model.Group;
+import com.example.trackthat.model.Habit;
 import com.example.trackthat.repository.HabitRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.List;
 
 public class HabitsFragment extends Fragment {
 
     private HabitRepository repository;
-    private HabitAdapter adapter;
+    private HabitGroupAdapter adapter;
 
     @Nullable
     @Override
@@ -33,8 +37,7 @@ public class HabitsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         repository = new HabitRepository();
-
-        adapter = new HabitAdapter(habit -> {
+        adapter = new HabitGroupAdapter(habit -> {
             // TODO: Habit bearbeiten/löschen
         });
 
@@ -43,30 +46,29 @@ public class HabitsFragment extends Fragment {
         recycler.setAdapter(adapter);
 
         FloatingActionButton fab = view.findViewById(R.id.buttonAddHabit);
-        fab.setOnClickListener(v -> {
-            AddHabitDialog dialog = new AddHabitDialog();
-            dialog.setOnHabitAddedListener(habit -> {
-                repository.addHabit(habit, new HabitRepository.OnSuccessListener() {
-                    @Override
-                    public void onSuccess() {
-                        loadHabits();
-                    }
-
-                    @Override
-                    public void onFailure(String error) {}
-                });
-            });
-            dialog.show(getParentFragmentManager(), "AddHabitDialog");
-        });
+        fab.setOnClickListener(v ->
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainer, new AddHabitFragment())
+                        .addToBackStack(null)
+                        .commit());
 
         loadHabits();
     }
 
     private void loadHabits() {
-        repository.getHabits(new HabitRepository.OnHabitsLoadedListener() {
+        repository.getGroups(new HabitRepository.OnGroupsLoadedListener() {
             @Override
-            public void onLoaded(java.util.List<com.example.trackthat.model.Habit> habits) {
-                adapter.setHabits(habits);
+            public void onLoaded(List<Group> groups) {
+                repository.getHabitsSorted(new HabitRepository.OnHabitsLoadedListener() {
+                    @Override
+                    public void onLoaded(List<Habit> habits) {
+                        adapter.setData(groups, habits);
+                    }
+
+                    @Override
+                    public void onFailure(String error) {}
+                });
             }
 
             @Override
