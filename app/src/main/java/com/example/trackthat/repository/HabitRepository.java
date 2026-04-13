@@ -82,6 +82,15 @@ public class HabitRepository {
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 
+    public void getAllEntries(OnEntriesLoadedListener listener) {
+        db.collection("users").document(getUserId())
+                .collection("entries")
+                .get()
+                .addOnSuccessListener(query -> {
+                    listener.onLoaded(query.toObjects(HabitEntry.class));
+                })
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
     public ListenerRegistration listenToHabits(OnHabitsLoadedListener listener) {
         return db.collection("users").document(getUserId())
                 .collection("habits")
