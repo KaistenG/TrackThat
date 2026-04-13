@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +19,8 @@ import com.example.trackthat.repository.HabitRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.ItemTouchHelper;
 
 public class HabitsFragment extends Fragment {
 
@@ -44,6 +47,27 @@ public class HabitsFragment extends Fragment {
         RecyclerView recycler = view.findViewById(R.id.recyclerViewHabits);
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
+
+        HabitDragCallback dragCallback = new HabitDragCallback(new HabitDragCallback.OnItemMovedListener() {
+            @Override
+            public void onItemMoved(int fromPosition, int toPosition) {
+                adapter.moveItem(fromPosition, toPosition);
+            }
+
+            @Override
+            public void onDragFinished() {
+                repository.updateHabitOrder(adapter.getHabitsInOrder(),
+                        new HabitRepository.OnSuccessListener() {
+                            @Override
+                            public void onSuccess() {}
+
+                            @Override
+                            public void onFailure(String error) {}
+                        });
+            }
+        });
+
+        new ItemTouchHelper(dragCallback).attachToRecyclerView(recycler);
 
         FloatingActionButton fab = view.findViewById(R.id.buttonAddHabit);
         fab.setOnClickListener(v ->

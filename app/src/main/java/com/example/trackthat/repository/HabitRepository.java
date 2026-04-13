@@ -9,6 +9,8 @@ import com.google.firebase.firestore.ListenerRegistration;
 
 import com.example.trackthat.model.Group;
 
+import java.util.List;
+
 public class HabitRepository {
 
     private final FirebaseFirestore db;
@@ -128,6 +130,20 @@ public class HabitRepository {
                 })
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
+
+    public void updateHabitOrder(List<Habit> habits, OnSuccessListener listener) {
+        com.google.firebase.firestore.WriteBatch batch = db.batch();
+        for (int i = 0; i < habits.size(); i++) {
+            batch.update(
+                    db.collection("users").document(getUserId())
+                            .collection("habits").document(habits.get(i).getId()),
+                    "order", i
+            );
+        }
+        batch.commit()
+                .addOnSuccessListener(unused -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
     public ListenerRegistration listenToHabits(OnHabitsLoadedListener listener) {
         return db.collection("users").document(getUserId())
                 .collection("habits")
@@ -147,6 +163,7 @@ public class HabitRepository {
                     listener.onLoaded(query.toObjects(HabitEntry.class));
                 });
     }
+
 
     // Interfaces
     public interface OnSuccessListener {

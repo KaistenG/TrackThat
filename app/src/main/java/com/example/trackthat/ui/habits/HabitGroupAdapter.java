@@ -138,4 +138,18 @@ public class HabitGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             colorIndicator = itemView.findViewById(R.id.colorIndicator);
         }
     }
+
+    public void moveItem(int fromPosition, int toPosition) {
+        ListItem item = items.remove(fromPosition);
+        items.add(toPosition, item);
+        notifyItemMoved(fromPosition, toPosition);
+    }
+
+    public List<Habit> getHabitsInOrder() {
+        List<Habit> habits = new ArrayList<>();
+        for (ListItem item : items) {
+            if (!item.isHeader()) habits.add(item.habit);
+        }
+        return habits;
+    }
 }
