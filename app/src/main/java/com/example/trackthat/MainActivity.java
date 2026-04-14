@@ -26,28 +26,36 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
-
-            // Wenn bereits ein nicht-Kalender Fragment aktiv ist -> zurück zum Kalender
             Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-            if (!(current instanceof CalendarFragment)) {
-                showFragment(new CalendarFragment());
-                bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
-                bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
-                bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Statistiken");
-                bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_menu_report_image);
-                return false;
-            }
 
             if (id == R.id.nav_habits) {
-                showFragment(new HabitsFragment());
-                item.setTitle("Zurück");
-                item.setIcon(android.R.drawable.ic_media_previous);
-                return true;
+                if (current instanceof HabitsFragment) {
+                    // Zurück zum Kalender
+                    showFragment(new CalendarFragment());
+                    resetNavigation();
+                    return false;
+                } else {
+                    showFragment(new HabitsFragment());
+                    bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Zurück");
+                    bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_media_previous);
+                    bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Statistiken");
+                    bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_menu_report_image);
+                    return true;
+                }
             } else if (id == R.id.nav_stats) {
-                showFragment(new StatsFragment());
-                item.setTitle("Zurück");
-                item.setIcon(android.R.drawable.ic_media_previous);
-                return true;
+                if (current instanceof StatsFragment) {
+                    // Zurück zum Kalender
+                    showFragment(new CalendarFragment());
+                    resetNavigation();
+                    return false;
+                } else {
+                    showFragment(new StatsFragment());
+                    bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Zurück");
+                    bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_media_previous);
+                    bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
+                    bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
+                    return true;
+                }
             }
             return false;
         });
@@ -58,5 +66,12 @@ public class MainActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.fragmentContainer, fragment)
                 .commit();
+    }
+
+    private void resetNavigation() {
+        bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
+        bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
+        bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Statistiken");
+        bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_menu_report_image);
     }
 }
