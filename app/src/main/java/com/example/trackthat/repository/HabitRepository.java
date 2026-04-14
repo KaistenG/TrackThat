@@ -39,6 +39,22 @@ public class HabitRepository {
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 
+    public void updateHabit(Habit habit, OnSuccessListener listener) {
+        db.collection("users").document(getUserId())
+                .collection("habits").document(habit.getId())
+                .set(habit)
+                .addOnSuccessListener(unused -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    public void deleteHabit(String habitId, OnSuccessListener listener) {
+        db.collection("users").document(getUserId())
+                .collection("habits").document(habitId)
+                .delete()
+                .addOnSuccessListener(unused -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
     public void getHabits(OnHabitsLoadedListener listener) {
         db.collection("users").document(getUserId())
                 .collection("habits")

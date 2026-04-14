@@ -23,6 +23,7 @@ public class HabitGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     public interface OnHabitClickListener {
         void onHabitClick(Habit habit);
+        void onHabitDoubleClick(Habit habit);
     }
 
     // Listenelement – entweder Gruppe oder Habit
@@ -112,7 +113,25 @@ public class HabitGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             circle.setColor(habit.getColor());
             habitHolder.colorIndicator.setBackground(circle);
 
-            habitHolder.itemView.setOnClickListener(v -> listener.onHabitClick(habit));
+            habitHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                private int clickCount = 0;
+                private final android.os.Handler handler = new android.os.Handler();
+
+                @Override
+                public void onClick(View v) {
+                    clickCount++;
+                    if (clickCount == 1) {
+                        handler.postDelayed(() -> {
+                            if (clickCount == 1) listener.onHabitClick(habit);
+                            clickCount = 0;
+                        }, 300);
+                    } else if (clickCount == 2) {
+                        handler.removeCallbacksAndMessages(null);
+                        clickCount = 0;
+                        listener.onHabitDoubleClick(habit);
+                    }
+                }
+            });
         }
     }
 

@@ -22,6 +22,8 @@ import java.util.List;
 
 import androidx.recyclerview.widget.ItemTouchHelper;
 
+import com.example.trackthat.ui.habits.EditHabitFragment;
+
 public class HabitsFragment extends Fragment {
 
     private HabitRepository repository;
@@ -40,8 +42,20 @@ public class HabitsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         repository = new HabitRepository();
-        adapter = new HabitGroupAdapter(habit -> {
-            // TODO: Habit bearbeiten/löschen
+        adapter = new HabitGroupAdapter(new HabitGroupAdapter.OnHabitClickListener() {
+            @Override
+            public void onHabitClick(Habit habit) {
+                // vorerst nichts
+            }
+
+            @Override
+            public void onHabitDoubleClick(Habit habit) {
+                getParentFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainer, EditHabitFragment.newInstance(habit.getId()))
+                        .addToBackStack(null)
+                        .commit();
+            }
         });
 
         RecyclerView recycler = view.findViewById(R.id.recyclerViewHabits);
