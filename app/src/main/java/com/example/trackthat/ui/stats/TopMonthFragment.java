@@ -46,9 +46,6 @@ public class TopMonthFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
 
-        view.findViewById(R.id.buttonBack).setOnClickListener(v ->
-                getParentFragmentManager().popBackStack());
-
         ((android.widget.TextView) view.findViewById(R.id.textViewTitle))
                 .setText("Topmonat");
 

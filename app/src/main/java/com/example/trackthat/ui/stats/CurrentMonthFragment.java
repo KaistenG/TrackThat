@@ -46,9 +46,6 @@ public class CurrentMonthFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
         recycler.setAdapter(adapter);
 
-        view.findViewById(R.id.buttonBack).setOnClickListener(v ->
-                getParentFragmentManager().popBackStack());
-
         // Titel setzen
         Calendar today = Calendar.getInstance();
         String[] months = new DateFormatSymbols(Locale.GERMAN).getMonths();
