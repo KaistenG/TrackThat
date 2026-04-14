@@ -5,9 +5,11 @@ import com.example.trackthat.model.HabitEntry;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import com.example.trackthat.model.Group;
+import com.google.firebase.firestore.PersistentCacheSettings;
 
 import java.util.List;
 
@@ -19,6 +21,11 @@ public class HabitRepository {
     public HabitRepository() {
         this.db = FirebaseFirestore.getInstance();
         this.auth = FirebaseAuth.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setLocalCacheSettings(PersistentCacheSettings.newBuilder().build())
+                .build();
+        db.setFirestoreSettings(settings);
     }
 
     private String getUserId() {

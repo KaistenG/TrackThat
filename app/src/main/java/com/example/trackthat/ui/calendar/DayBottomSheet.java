@@ -17,6 +17,7 @@ import com.example.trackthat.repository.HabitRepository;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.example.trackthat.model.Group;
@@ -93,22 +94,35 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
         });
 
         adapter = new HabitToggleAdapter((habit, isActive) -> {
+            // Sofort UI aktualisieren (optimistic update)
+            if (isActive) {
+                if (!activeHabitIds.contains(habit.getId())) {
+                    activeHabitIds.add(habit.getId());
+                }
+            } else {
+                activeHabitIds.remove(habit.getId());
+            }
+            adapter.setActiveHabitIds(activeHabitIds);
+            updatePreview();
+
+            // Firestore im Hintergrund aktualisieren
             repository.toggleEntry(habit.getId(), dateString, new HabitRepository.OnSuccessListener() {
                 @Override
-                public void onSuccess() {
+                public void onSuccess() {}
+
+                @Override
+                public void onFailure(String error) {
+                    // Bei Fehler: UI zurücksetzen
                     if (isActive) {
+                        activeHabitIds.remove(habit.getId());
+                    } else {
                         if (!activeHabitIds.contains(habit.getId())) {
                             activeHabitIds.add(habit.getId());
                         }
-                    } else {
-                        activeHabitIds.remove(habit.getId());
                     }
                     adapter.setActiveHabitIds(activeHabitIds);
                     updatePreview();
                 }
-
-                @Override
-                public void onFailure(String error) {}
             });
         });
 
@@ -167,6 +181,9 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
                 activeHabits.add(habit);
             }
         }
+        List<Habit> sortedAllHabits = new ArrayList<>(allHabits);
+        Collections.sort(sortedAllHabits, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
+        dayPreviewView.setAllHabits(sortedAllHabits);
         dayPreviewView.setActiveHabits(activeHabits);
         updateClearButton();
     }

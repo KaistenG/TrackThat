@@ -15,6 +15,7 @@ public class DayPreviewView extends View {
 
     private Paint paint;
     private List<Habit> activeHabits = new ArrayList<>();
+    private List<Habit> allHabits = new ArrayList<>();
 
     public DayPreviewView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -27,43 +28,57 @@ public class DayPreviewView extends View {
         invalidate();
     }
 
+    public void setAllHabits(List<Habit> allHabits) {
+        this.allHabits = allHabits;
+        invalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         int w = getWidth();
         int h = getHeight();
-        int stripeWidth = (int) (w * 0.05f);
+        int stripeWidth = (int) (w * 0.06f);
         int verticalIndex = 0;
         int horizontalIndex = 0;
 
-        // Erst alle vertikalen Streifen
-        for (Habit habit : activeHabits) {
-            if (!habit.getVisualType().equals("VERTICAL")) continue;
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(habit.getColor());
-            int vX = (int) (w * 0.15f * (verticalIndex + 1));
-            canvas.drawRect(vX, 0, vX + stripeWidth, h, paint);
-            verticalIndex++;
-        }
+        for (Habit habit : allHabits) {
+            boolean isActive = false;
+            for (Habit active : activeHabits) {
+                if (active.getId().equals(habit.getId())) {
+                    isActive = true;
+                    break;
+                }
+            }
 
-        // Dann alle horizontalen Streifen
-        for (Habit habit : activeHabits) {
-            if (!habit.getVisualType().equals("HORIZONTAL")) continue;
-            paint.setStyle(Paint.Style.FILL);
-            paint.setColor(habit.getColor());
-            int hY = (int) (h * 0.15f * (horizontalIndex + 1));
-            canvas.drawRect(0, hY, w, hY + stripeWidth, paint);
-            horizontalIndex++;
-        }
+            if (!isActive) {
+                if (habit.getVisualType().equals("VERTICAL")) verticalIndex++;
+                else if (habit.getVisualType().equals("HORIZONTAL")) horizontalIndex++;
+                continue;
+            }
 
-        // Border immer zuletzt (oben drüber)
-        for (Habit habit : activeHabits) {
-            if (!habit.getVisualType().equals("BORDER")) continue;
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(habit.getColor());
-            paint.setStrokeWidth(24);
-            canvas.drawRect(4, 4, w - 4, h - 4, paint);
             paint.setStyle(Paint.Style.FILL);
+            paint.setColor(habit.getColor());
+
+            switch (habit.getVisualType()) {
+                case "VERTICAL":
+                    int vX = (int) (w * 0.10f * (verticalIndex + 1));
+                    canvas.drawRect(vX, 0, vX + stripeWidth, h, paint);
+                    verticalIndex++;
+                    break;
+                case "HORIZONTAL":
+                    int hY = (int) (h * 0.10f * (horizontalIndex + 1));
+                    canvas.drawRect(0, hY, w, hY + stripeWidth, paint);
+                    horizontalIndex++;
+                    break;
+                case "BORDER":
+                    paint.setStyle(Paint.Style.STROKE);
+                    paint.setColor(habit.getColor());
+                    paint.setStrokeWidth(12);
+                    canvas.drawRect(4, 4, w - 4, h - 4, paint);
+                    paint.setStyle(Paint.Style.FILL);
+                    break;
+            }
         }
     }
 }

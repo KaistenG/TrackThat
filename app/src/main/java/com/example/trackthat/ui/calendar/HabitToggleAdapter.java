@@ -14,6 +14,7 @@ import com.example.trackthat.model.Group;
 import com.example.trackthat.model.Habit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class HabitToggleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -62,6 +63,7 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             for (Habit habit : habits) {
                 if (group.getId().equals(habit.getGroupId())) groupHabits.add(habit);
             }
+            Collections.sort(groupHabits, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
             if (!groupHabits.isEmpty()) {
                 items.add(new ListItem(group));
                 for (Habit habit : groupHabits) items.add(new ListItem(habit));

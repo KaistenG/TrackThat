@@ -102,6 +102,8 @@ public class HabitsFragment extends Fragment {
                     @Override
                     public void onLoaded(List<Habit> habits) {
                         adapter.setData(groups, habits);
+                        for (Habit h : habits) {
+                        }
                     }
 
                     @Override
