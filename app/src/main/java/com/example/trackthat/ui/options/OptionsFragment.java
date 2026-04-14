@@ -42,11 +42,19 @@ public class OptionsFragment extends Fragment {
         });
 
         view.findViewById(R.id.buttonHowTo).setOnClickListener(v -> {
-            // TODO: Anleitung
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, new HowToFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
         view.findViewById(R.id.buttonImprint).setOnClickListener(v -> {
-            // TODO: Impressum
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, new ImprintFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 }

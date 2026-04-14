@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Anleitung"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="24dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gewohnheiten anlegen"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tippe auf Gewohnheiten und dann auf das + Symbol um eine neue Gewohnheit anzulegen. Gib ihr einen Namen, weise sie einer Gruppe zu, wähle eine Visualisierung und eine Farbe."
+            android:lineSpacingMultiplier="1.4"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gewohnheiten tracken"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tippe auf einen Tag im Kalender oder auf die heutige Kachel um deine Gewohnheiten für diesen Tag ein- oder auszuhaken."
+            android:lineSpacingMultiplier="1.4"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Visualisierung"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Vertikale Streifen eignen sich für wöchentliche Aktivitäten wie Sport. Horizontale Streifen für tägliche Gewohnheiten wie Wasser trinken. Die Umrandung zeigt die allgemeine Tagesstimmung."
+            android:lineSpacingMultiplier="1.4"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reihenfolge anpassen"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Halte eine Gewohnheit gedrückt und ziehe sie an die gewünschte Position. Die Reihenfolge bestimmt die Position der Streifen im Kalender."
+            android:lineSpacingMultiplier="1.4"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Statistiken"
+            android:textStyle="bold"
+            android:layout_marginBottom="4dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unter Statistiken findest du eine Übersicht deines aktuellen Monats, Vergleiche mit dem Durchschnitt und dem Topmonat, sowie deine aktuellen Streaks."
+            android:lineSpacingMultiplier="1.4"/>
+
+    </LinearLayout>
+
+</ScrollView>
