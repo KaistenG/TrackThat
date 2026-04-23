@@ -56,10 +56,23 @@ public class HabitRepository {
     }
 
     public void deleteHabit(String habitId, OnSuccessListener listener) {
+        // Erst alle Einträge des Habits löschen
         db.collection("users").document(getUserId())
-                .collection("habits").document(habitId)
-                .delete()
-                .addOnSuccessListener(unused -> listener.onSuccess())
+                .collection("entries")
+                .whereEqualTo("habitId", habitId)
+                .get()
+                .addOnSuccessListener(query -> {
+                    com.google.firebase.firestore.WriteBatch batch = db.batch();
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : query.getDocuments()) {
+                        batch.delete(doc.getReference());
+                    }
+                    // Dann das Habit selbst löschen
+                    batch.delete(db.collection("users").document(getUserId())
+                            .collection("habits").document(habitId));
+                    batch.commit()
+                            .addOnSuccessListener(unused -> listener.onSuccess())
+                            .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+                })
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 
