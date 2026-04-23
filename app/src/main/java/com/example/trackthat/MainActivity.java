@@ -104,7 +104,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void navigateToFragment(Fragment fragment) {
-        showFragment(fragment);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit();
         bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Zurück");
         bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_media_previous);
     }
