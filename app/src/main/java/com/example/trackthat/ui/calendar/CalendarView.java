@@ -96,12 +96,6 @@ public class CalendarView extends View {
             paint.setTypeface(Typeface.DEFAULT);
             paint.setColor(isToday ? 0xFFD1C4E9 : 0xFFEEEEEE);
             canvas.drawRect(x + 2, y + 2, x + cellSize - 2, y + cellSize - 2, paint);
-            // Tageszahl oben rechts
-            paint.setColor(0xFF333333);
-            paint.setTextSize(24);
-            String dayStr = String.valueOf(day);
-            float textWidth = paint.measureText(dayStr);
-            canvas.drawText(dayStr, x + cellSize - textWidth - 8, y + 28, paint);
 
             // Streifen zeichnen
             String dayKey = String.valueOf(day);
@@ -112,7 +106,6 @@ public class CalendarView extends View {
             int verticalIndex = 0;
             int horizontalIndex = 0;
 
-            // Alle Habits durchgehen - position bleibt fix
             for (Habit habit : habits) {
                 boolean isActive = false;
                 for (Habit active : dayActiveHabits) {
@@ -149,6 +142,14 @@ public class CalendarView extends View {
                         break;
                 }
             }
+
+            // Tageszahl zuletzt zeichnen (über den Streifen)
+            paint.setColor(0xFF333333);
+            paint.setTextSize(24);
+            paint.setTypeface(Typeface.DEFAULT);
+            String dayStr = String.valueOf(day);
+            float textWidth = paint.measureText(dayStr);
+            canvas.drawText(dayStr, x + cellSize - textWidth - 8, y + 28, paint);
         }
     }
 

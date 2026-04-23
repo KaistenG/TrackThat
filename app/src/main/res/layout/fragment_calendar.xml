@@ -3,11 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/appHeader"
+        android:text="TrackThat"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FF6200EE"
+        android:gravity="center"
+        android:background="#FFFFFFFF"/>
+
     <LinearLayout
         android:id="@+id/calendarHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@id/appHeader"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
@@ -42,17 +54,25 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/calendarHeader"/>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddHabitFromCalendar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="6dp"
+        android:src="@android:drawable/ic_input_add"/>
+
     <TextView
         android:id="@+id/buttonToday"
         android:layout_width="92dp"
         android:layout_height="92dp"
-        android:layout_below="@id/calendarView"
+        android:layout_above="@id/fabAddHabitFromCalendar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="48dp"
         android:background="#FFEEEEEE"
         android:gravity="center"
-        android:textSize="22sp"
         android:textColor="#FF333333"
-        android:textStyle="bold"/>
-
+        android:textSize="22sp"
+        android:textStyle="bold" />
 </RelativeLayout>

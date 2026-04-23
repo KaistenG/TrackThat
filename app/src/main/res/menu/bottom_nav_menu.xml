@@ -2,18 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/nav_habits"
-        android:title="Gewohnheiten"
-        android:icon="@android:drawable/ic_menu_edit"/>
-
-    <item
         android:id="@+id/nav_stats"
         android:title="Statistiken"
         android:icon="@android:drawable/ic_menu_report_image"/>
 
     <item
+        android:id="@+id/nav_habits"
+        android:title="Gewohnheiten"
+        android:icon="@android:drawable/ic_menu_edit"/>
+
+    <item
         android:id="@+id/nav_options"
         android:title="Optionen"
         android:icon="@android:drawable/ic_menu_preferences"/>
-
 </menu>

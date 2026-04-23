@@ -88,11 +88,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void resetNavigation() {
-        bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
-        bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
         bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Statistiken");
         bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_menu_report_image);
+        bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
+        bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
         bottomNav.getMenu().findItem(R.id.nav_options).setTitle("Optionen");
         bottomNav.getMenu().findItem(R.id.nav_options).setIcon(android.R.drawable.ic_menu_preferences);
+    }
+
+    public void navigateToFragment(Fragment fragment) {
+        showFragment(fragment);
+        bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Zurück");
+        bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_media_previous);
     }
 }

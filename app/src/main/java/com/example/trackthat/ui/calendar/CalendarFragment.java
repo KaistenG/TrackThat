@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.trackthat.MainActivity;
 import com.example.trackthat.R;
 
 import java.text.DateFormatSymbols;
@@ -22,6 +23,7 @@ import com.example.trackthat.model.HabitEntry;
 import com.example.trackthat.repository.HabitRepository;
 import java.util.List;
 
+import com.example.trackthat.ui.habits.AddHabitFragment;
 import com.google.firebase.firestore.ListenerRegistration;
 import java.util.ArrayList;
 
@@ -91,6 +93,12 @@ public class CalendarFragment extends Fragment {
             sheet.show(getParentFragmentManager(), "DayBottomSheet");
         });
         loadCalendarData();
+
+        view.findViewById(R.id.fabAddHabitFromCalendar).setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).navigateToFragment(new AddHabitFragment());
+            }
+        });
     }
 
     private void updateMonthLabel() {
