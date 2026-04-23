@@ -107,4 +107,20 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Zurück");
         bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_media_previous);
     }
+    @Override
+    public void onBackPressed() {
+        // Erst den Fragment-Backstack leeren
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStack(null,
+                    androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+
+        Fragment current = getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (current instanceof CalendarFragment) {
+            super.onBackPressed();
+        } else {
+            showFragment(new CalendarFragment());
+            resetNavigation();
+        }
+    }
 }
