@@ -54,9 +54,6 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.ViewHolder> 
             case "HORIZONTAL":
                 holder.textViewVisualType.setText("Horizontaler Streifen");
                 break;
-            case "BORDER":
-                holder.textViewVisualType.setText("Umrandung");
-                break;
         }
 
         GradientDrawable circle = new GradientDrawable();

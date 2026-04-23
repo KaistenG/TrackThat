@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trackthat.R;
-import com.example.trackthat.model.Group;
 import com.example.trackthat.model.Habit;
 
 import java.util.ArrayList;
@@ -27,13 +26,13 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     private static class ListItem {
-        Group group;
+        String header;
         Habit habit;
 
-        ListItem(Group group) { this.group = group; }
+        ListItem(String header) { this.header = header; }
         ListItem(Habit habit) { this.habit = habit; }
 
-        boolean isHeader() { return group != null; }
+        boolean isHeader() { return header != null; }
     }
 
     private List<ListItem> items = new ArrayList<>();
@@ -44,30 +43,27 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.listener = listener;
     }
 
-    public void setData(List<Group> groups, List<Habit> habits) {
+    public void setHabits(List<Habit> habits) {
         items.clear();
 
-        // Habits ohne Gruppe
-        List<Habit> ungrouped = new ArrayList<>();
+        List<Habit> weeklies = new ArrayList<>();
+        List<Habit> dailies = new ArrayList<>();
+
         for (Habit habit : habits) {
-            if (habit.getGroupId() == null) ungrouped.add(habit);
+            if (habit.getVisualType().equals("VERTICAL")) weeklies.add(habit);
+            else dailies.add(habit);
         }
-        if (!ungrouped.isEmpty()) {
-            items.add(new ListItem(new Group(null, "Ohne Gruppe", -1)));
-            for (Habit habit : ungrouped) items.add(new ListItem(habit));
+        Collections.sort(weeklies, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
+        Collections.sort(dailies, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
+
+        if (!weeklies.isEmpty()) {
+            items.add(new ListItem("Weekly"));
+            for (Habit h : weeklies) items.add(new ListItem(h));
         }
 
-        // Habits nach Gruppe
-        for (Group group : groups) {
-            List<Habit> groupHabits = new ArrayList<>();
-            for (Habit habit : habits) {
-                if (group.getId().equals(habit.getGroupId())) groupHabits.add(habit);
-            }
-            Collections.sort(groupHabits, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
-            if (!groupHabits.isEmpty()) {
-                items.add(new ListItem(group));
-                for (Habit habit : groupHabits) items.add(new ListItem(habit));
-            }
+        if (!dailies.isEmpty()) {
+            items.add(new ListItem("Daily"));
+            for (Habit h : dailies) items.add(new ListItem(h));
         }
 
         notifyDataSetChanged();
@@ -76,6 +72,15 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void setActiveHabitIds(List<String> ids) {
         this.activeHabitIds = ids;
         notifyDataSetChanged();
+    }
+
+    public List<Habit> getAllHabits() {
+        List<Habit> habits = new ArrayList<>();
+        for (ListItem item : items) {
+            if (!item.isHeader()) habits.add(item.habit);
+        }
+        Collections.sort(habits, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
+        return habits;
     }
 
     @Override
@@ -101,7 +106,7 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HeaderViewHolder) {
             ((HeaderViewHolder) holder).textViewGroupName
-                    .setText(items.get(position).group.getName());
+                    .setText(items.get(position).header);
         } else {
             Habit habit = items.get(position).habit;
             HabitViewHolder habitHolder = (HabitViewHolder) holder;
@@ -122,15 +127,6 @@ public class HabitToggleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public int getItemCount() { return items.size(); }
-
-    // Alle Habits aus der aktuellen Liste holen (für updatePreview)
-    public List<Habit> getAllHabits() {
-        List<Habit> habits = new ArrayList<>();
-        for (ListItem item : items) {
-            if (!item.isHeader()) habits.add(item.habit);
-        }
-        return habits;
-    }
 
     static class HeaderViewHolder extends RecyclerView.ViewHolder {
         TextView textViewGroupName;

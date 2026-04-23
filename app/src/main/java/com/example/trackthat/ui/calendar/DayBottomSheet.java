@@ -20,8 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.example.trackthat.model.Group;
-
 
 public class DayBottomSheet extends BottomSheetDialogFragment {
 
@@ -34,8 +32,6 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
     private DayPreviewView dayPreviewView;
     private List<Habit> allHabits = new ArrayList<>();
     private List<String> activeHabitIds = new ArrayList<>();
-    private List<Group> groups = new ArrayList<>();
-
     private TextView buttonClearAll;
     private String dateString;
     private String currentMoodColor = null;
@@ -139,32 +135,23 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
     private void loadData() {
         String yearMonth = dateString.substring(0, 7);
 
-        repository.getGroups(new HabitRepository.OnGroupsLoadedListener() {
+        repository.getHabits(new HabitRepository.OnHabitsLoadedListener() {
             @Override
-            public void onLoaded(List<Group> loadedGroups) {
-                groups = loadedGroups;
-                repository.getHabits(new HabitRepository.OnHabitsLoadedListener() {
+            public void onLoaded(List<Habit> habits) {
+                allHabits = habits;
+                adapter.setHabits(habits);
+
+                repository.getEntriesForMonth(yearMonth, new HabitRepository.OnEntriesLoadedListener() {
                     @Override
-                    public void onLoaded(List<Habit> habits) {
-                        allHabits = habits;
-                        adapter.setData(groups, habits);
-
-                        repository.getEntriesForMonth(yearMonth, new HabitRepository.OnEntriesLoadedListener() {
-                            @Override
-                            public void onLoaded(List<com.example.trackthat.model.HabitEntry> entries) {
-                                activeHabitIds.clear();
-                                for (com.example.trackthat.model.HabitEntry entry : entries) {
-                                    if (entry.getDate().equals(dateString)) {
-                                        activeHabitIds.add(entry.getHabitId());
-                                    }
-                                }
-                                adapter.setActiveHabitIds(activeHabitIds);
-                                updatePreview();
+                    public void onLoaded(List<com.example.trackthat.model.HabitEntry> entries) {
+                        activeHabitIds.clear();
+                        for (com.example.trackthat.model.HabitEntry entry : entries) {
+                            if (entry.getDate().equals(dateString)) {
+                                activeHabitIds.add(entry.getHabitId());
                             }
-
-                            @Override
-                            public void onFailure(String error) {}
-                        });
+                        }
+                        adapter.setActiveHabitIds(activeHabitIds);
+                        updatePreview();
                     }
 
                     @Override

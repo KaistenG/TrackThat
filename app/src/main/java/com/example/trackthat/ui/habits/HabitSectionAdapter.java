@@ -10,13 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trackthat.R;
-import com.example.trackthat.model.Group;
 import com.example.trackthat.model.Habit;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class HabitGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_HABIT = 1;
@@ -26,50 +26,61 @@ public class HabitGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         void onHabitDoubleClick(Habit habit);
     }
 
-    // Listenelement – entweder Gruppe oder Habit
     private static class ListItem {
-        Group group;
+        String header;
         Habit habit;
 
-        ListItem(Group group) { this.group = group; }
+        ListItem(String header) { this.header = header; }
         ListItem(Habit habit) { this.habit = habit; }
 
-        boolean isHeader() { return group != null; }
+        boolean isHeader() { return header != null; }
     }
 
     private List<ListItem> items = new ArrayList<>();
     private OnHabitClickListener listener;
 
-    public HabitGroupAdapter(OnHabitClickListener listener) {
+    public HabitSectionAdapter(OnHabitClickListener listener) {
         this.listener = listener;
     }
 
-    public void setData(List<Group> groups, List<Habit> habits) {
+    public void setHabits(List<Habit> habits) {
         items.clear();
 
-        // Habits ohne Gruppe zuerst
-        List<Habit> ungrouped = new ArrayList<>();
+        List<Habit> weeklies = new ArrayList<>();
+        List<Habit> dailies = new ArrayList<>();
+
         for (Habit habit : habits) {
-            if (habit.getGroupId() == null) ungrouped.add(habit);
+            if (habit.getVisualType().equals("VERTICAL")) weeklies.add(habit);
+            else dailies.add(habit);
         }
-        if (!ungrouped.isEmpty()) {
-            items.add(new ListItem(new Group(null, "Ohne Gruppe", -1)));
-            for (Habit habit : ungrouped) items.add(new ListItem(habit));
+        Collections.sort(weeklies, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
+        Collections.sort(dailies, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
+
+        if (!weeklies.isEmpty()) {
+            items.add(new ListItem("Weekly"));
+            for (Habit h : weeklies) items.add(new ListItem(h));
         }
 
-        // Habits nach Gruppe
-        for (Group group : groups) {
-            List<Habit> groupHabits = new ArrayList<>();
-            for (Habit habit : habits) {
-                if (group.getId().equals(habit.getGroupId())) groupHabits.add(habit);
-            }
-            if (!groupHabits.isEmpty()) {
-                items.add(new ListItem(group));
-                for (Habit habit : groupHabits) items.add(new ListItem(habit));
-            }
+        if (!dailies.isEmpty()) {
+            items.add(new ListItem("Daily"));
+            for (Habit h : dailies) items.add(new ListItem(h));
         }
 
         notifyDataSetChanged();
+    }
+
+    public void moveItem(int from, int to) {
+        ListItem item = items.remove(from);
+        items.add(to, item);
+        notifyItemMoved(from, to);
+    }
+
+    public List<Habit> getHabitsInOrder() {
+        List<Habit> habits = new ArrayList<>();
+        for (ListItem item : items) {
+            if (!item.isHeader()) habits.add(item.habit);
+        }
+        return habits;
     }
 
     @Override
@@ -94,26 +105,20 @@ public class HabitGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof HeaderViewHolder) {
-            ((HeaderViewHolder) holder).textViewGroupName
-                    .setText(items.get(position).group.getName());
+            ((HeaderViewHolder) holder).textViewGroupName.setText(items.get(position).header);
         } else {
             Habit habit = items.get(position).habit;
-            HabitViewHolder habitHolder = (HabitViewHolder) holder;
+            HabitViewHolder h = (HabitViewHolder) holder;
 
-            habitHolder.textViewName.setText(habit.getName());
-
-            switch (habit.getVisualType()) {
-                case "VERTICAL": habitHolder.textViewVisualType.setText("Vertikaler Streifen"); break;
-                case "HORIZONTAL": habitHolder.textViewVisualType.setText("Horizontaler Streifen"); break;
-                case "BORDER": habitHolder.textViewVisualType.setText("Umrandung"); break;
-            }
+            h.textViewName.setText(habit.getName());
+            h.textViewVisualType.setText(habit.getVisualType().equals("VERTICAL") ? "Weekly" : "Daily");
 
             GradientDrawable circle = new GradientDrawable();
             circle.setShape(GradientDrawable.OVAL);
             circle.setColor(habit.getColor());
-            habitHolder.colorIndicator.setBackground(circle);
+            h.colorIndicator.setBackground(circle);
 
-            habitHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            h.itemView.setOnClickListener(new View.OnClickListener() {
                 private int clickCount = 0;
                 private final android.os.Handler handler = new android.os.Handler();
 
@@ -156,19 +161,5 @@ public class HabitGroupAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             textViewVisualType = itemView.findViewById(R.id.textViewVisualType);
             colorIndicator = itemView.findViewById(R.id.colorIndicator);
         }
-    }
-
-    public void moveItem(int fromPosition, int toPosition) {
-        ListItem item = items.remove(fromPosition);
-        items.add(toPosition, item);
-        notifyItemMoved(fromPosition, toPosition);
-    }
-
-    public List<Habit> getHabitsInOrder() {
-        List<Habit> habits = new ArrayList<>();
-        for (ListItem item : items) {
-            if (!item.isHeader()) habits.add(item.habit);
-        }
-        return habits;
     }
 }

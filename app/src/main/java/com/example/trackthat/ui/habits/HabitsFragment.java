@@ -13,21 +13,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.trackthat.R;
-import com.example.trackthat.model.Group;
 import com.example.trackthat.model.Habit;
 import com.example.trackthat.repository.HabitRepository;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 
-import androidx.recyclerview.widget.ItemTouchHelper;
-
-import com.example.trackthat.ui.habits.EditHabitFragment;
-
 public class HabitsFragment extends Fragment {
 
     private HabitRepository repository;
-    private HabitGroupAdapter adapter;
+    private HabitSectionAdapter adapter;
 
     @Nullable
     @Override
@@ -42,11 +37,9 @@ public class HabitsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         repository = new HabitRepository();
-        adapter = new HabitGroupAdapter(new HabitGroupAdapter.OnHabitClickListener() {
+        adapter = new HabitSectionAdapter(new HabitSectionAdapter.OnHabitClickListener() {
             @Override
-            public void onHabitClick(Habit habit) {
-                // vorerst nichts
-            }
+            public void onHabitClick(Habit habit) {}
 
             @Override
             public void onHabitDoubleClick(Habit habit) {
@@ -95,20 +88,10 @@ public class HabitsFragment extends Fragment {
     }
 
     private void loadHabits() {
-        repository.getGroups(new HabitRepository.OnGroupsLoadedListener() {
+        repository.getHabitsSorted(new HabitRepository.OnHabitsLoadedListener() {
             @Override
-            public void onLoaded(List<Group> groups) {
-                repository.getHabitsSorted(new HabitRepository.OnHabitsLoadedListener() {
-                    @Override
-                    public void onLoaded(List<Habit> habits) {
-                        adapter.setData(groups, habits);
-                        for (Habit h : habits) {
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(String error) {}
-                });
+            public void onLoaded(List<Habit> habits) {
+                adapter.setHabits(habits);
             }
 
             @Override
