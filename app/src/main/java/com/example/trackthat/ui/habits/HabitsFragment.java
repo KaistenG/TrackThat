@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,44 +36,66 @@ public class HabitsFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         repository = new HabitRepository();
-        adapter = new HabitSectionAdapter(new HabitSectionAdapter.OnHabitClickListener() {
+        adapter = new HabitSectionAdapter(new HabitSectionAdapter.OnHabitActionListener() {
             @Override
-            public void onHabitClick(Habit habit) {}
-
-            @Override
-            public void onHabitDoubleClick(Habit habit) {
+            public void onEdit(Habit habit) {
                 getParentFragmentManager()
                         .beginTransaction()
                         .replace(R.id.fragmentContainer, EditHabitFragment.newInstance(habit.getId()))
                         .addToBackStack(null)
                         .commit();
             }
-        });
 
-        RecyclerView recycler = view.findViewById(R.id.recyclerViewHabits);
-        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
-        recycler.setAdapter(adapter);
-
-        HabitDragCallback dragCallback = new HabitDragCallback(new HabitDragCallback.OnItemMovedListener() {
             @Override
-            public void onItemMoved(int fromPosition, int toPosition) {
-                adapter.moveItem(fromPosition, toPosition);
+            public void onDelete(Habit habit) {
+                new android.app.AlertDialog.Builder(getContext())
+                        .setTitle("Habit löschen")
+                        .setMessage("Möchtest du \"" + habit.getName() + "\" wirklich löschen?")
+                        .setPositiveButton("Löschen", (dialog, which) -> {
+                            repository.deleteHabit(habit.getId(), new HabitRepository.OnSuccessListener() {
+                                @Override
+                                public void onSuccess() { loadHabits(); }
+
+                                @Override
+                                public void onFailure(String error) {}
+                            });
+                        })
+                        .setNegativeButton("Abbrechen", null)
+                        .show();
             }
 
             @Override
-            public void onDragFinished() {
+            public void onMoveUp(int position) {
+                if (position <= 1) return;
+                if (adapter.isHeader(position - 1)) return;
+                adapter.swapHabits(position, position - 1);
                 repository.updateHabitOrder(adapter.getHabitsInOrder(),
                         new HabitRepository.OnSuccessListener() {
                             @Override
                             public void onSuccess() {}
+                            @Override
+                            public void onFailure(String error) {}
+                        });
+            }
 
+            @Override
+            public void onMoveDown(int position) {
+                if (position >= adapter.getItemCount() - 1) return;
+                if (adapter.isHeader(position + 1)) return;
+                adapter.swapHabits(position, position + 1);
+                repository.updateHabitOrder(adapter.getHabitsInOrder(),
+                        new HabitRepository.OnSuccessListener() {
+                            @Override
+                            public void onSuccess() {}
                             @Override
                             public void onFailure(String error) {}
                         });
             }
         });
 
-        new ItemTouchHelper(dragCallback).attachToRecyclerView(recycler);
+        RecyclerView recycler = view.findViewById(R.id.recyclerViewHabits);
+        recycler.setLayoutManager(new LinearLayoutManager(getContext()));
+        recycler.setAdapter(adapter);
 
         FloatingActionButton fab = view.findViewById(R.id.buttonAddHabit);
         fab.setOnClickListener(v ->

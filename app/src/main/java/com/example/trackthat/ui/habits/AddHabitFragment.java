@@ -79,6 +79,18 @@ public class AddHabitFragment extends Fragment {
         repository.getHabits(new HabitRepository.OnHabitsLoadedListener() {
             @Override
             public void onLoaded(List<Habit> habits) {
+                // Prüfen ob Limit erreicht
+                long count = 0;
+                for (Habit h : habits) {
+                    if (h.getVisualType().equals(visualType)) count++;
+                }
+                if (count >= 6) {
+                    Toast.makeText(getContext(),
+                            "Maximal 6 " + (visualType.equals("VERTICAL") ? "Weekly" : "Daily") + " Habits erlaubt",
+                            Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Habit habit = new Habit(null, name, selectedColor, visualType, streakable, habits.size());
                 repository.addHabit(habit, new HabitRepository.OnSuccessListener() {
                     @Override

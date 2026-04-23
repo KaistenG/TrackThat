@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="56dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:paddingStart="16dp"
@@ -20,11 +20,62 @@
         android:layout_weight="1"
         android:textSize="16sp"/>
 
+    <!-- Normal view -->
     <TextView
         android:id="@+id/textViewVisualType"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:textColor="#FF888888"/>
+
+    <!-- Edit view -->
+    <LinearLayout
+        android:id="@+id/habitEditView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/buttonMoveUp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="↑"
+            android:textSize="18sp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/buttonMoveDown"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="↓"
+            android:textSize="18sp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/buttonEditHabit"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="✏️"
+            android:textSize="16sp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+        <TextView
+            android:id="@+id/buttonDeleteHabit"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="🗑️"
+            android:textSize="16sp"
+            android:clickable="true"
+            android:focusable="true"/>
+
+    </LinearLayout>
 
 </LinearLayout>

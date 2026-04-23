@@ -63,7 +63,7 @@ public class CalendarView extends View {
         super.onDraw(canvas);
 
         // Wochentag-Header zeichnen
-        paint.setTextSize(48);
+        paint.setTextSize(56);
         paint.setTypeface(Typeface.DEFAULT_BOLD);
         for (int i = 0; i < columns; i++) {
             int x = i * cellSize;

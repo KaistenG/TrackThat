@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.trackthat.repository.HabitRepository;
 import com.example.trackthat.ui.calendar.CalendarFragment;
 import com.example.trackthat.ui.habits.HabitsFragment;
 import com.example.trackthat.ui.stats.StatsFragment;

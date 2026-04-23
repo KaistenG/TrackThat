@@ -21,9 +21,11 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private static final int TYPE_HEADER = 0;
     private static final int TYPE_HABIT = 1;
 
-    public interface OnHabitClickListener {
-        void onHabitClick(Habit habit);
-        void onHabitDoubleClick(Habit habit);
+    public interface OnHabitActionListener {
+        void onEdit(Habit habit);
+        void onDelete(Habit habit);
+        void onMoveUp(int position);
+        void onMoveDown(int position);
     }
 
     private static class ListItem {
@@ -37,14 +39,16 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     private List<ListItem> items = new ArrayList<>();
-    private OnHabitClickListener listener;
+    private OnHabitActionListener listener;
+    private int editModePosition = -1;
 
-    public HabitSectionAdapter(OnHabitClickListener listener) {
+    public HabitSectionAdapter(OnHabitActionListener listener) {
         this.listener = listener;
     }
 
     public void setHabits(List<Habit> habits) {
         items.clear();
+        editModePosition = -1;
 
         List<Habit> weeklies = new ArrayList<>();
         List<Habit> dailies = new ArrayList<>();
@@ -60,7 +64,6 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             items.add(new ListItem("Weekly"));
             for (Habit h : weeklies) items.add(new ListItem(h));
         }
-
         if (!dailies.isEmpty()) {
             items.add(new ListItem("Daily"));
             for (Habit h : dailies) items.add(new ListItem(h));
@@ -69,18 +72,27 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         notifyDataSetChanged();
     }
 
-    public void moveItem(int from, int to) {
-        ListItem item = items.remove(from);
-        items.add(to, item);
-        notifyItemMoved(from, to);
-    }
-
     public List<Habit> getHabitsInOrder() {
         List<Habit> habits = new ArrayList<>();
         for (ListItem item : items) {
             if (!item.isHeader()) habits.add(item.habit);
         }
         return habits;
+    }
+
+    public void swapHabits(int pos1, int pos2) {
+        ListItem item1 = items.get(pos1);
+        ListItem item2 = items.get(pos2);
+        items.set(pos1, item2);
+        items.set(pos2, item1);
+        editModePosition = pos2; // Edit-Mode mitverschieben
+        notifyItemMoved(pos1, pos2);
+        notifyItemChanged(pos1);
+        notifyItemChanged(pos2);
+    }
+
+    public boolean isHeader(int position) {
+        return items.get(position).isHeader();
     }
 
     @Override
@@ -109,6 +121,7 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         } else {
             Habit habit = items.get(position).habit;
             HabitViewHolder h = (HabitViewHolder) holder;
+            boolean isEditMode = editModePosition == position;
 
             h.textViewName.setText(habit.getName());
             h.textViewVisualType.setText(habit.getVisualType().equals("VERTICAL") ? "Weekly" : "Daily");
@@ -118,24 +131,43 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             circle.setColor(habit.getColor());
             h.colorIndicator.setBackground(circle);
 
-            h.itemView.setOnClickListener(new View.OnClickListener() {
-                private int clickCount = 0;
-                private final android.os.Handler handler = new android.os.Handler();
+            h.habitEditView.setVisibility(isEditMode ? View.VISIBLE : View.GONE);
+            h.habitEditView.setOnClickListener(v -> {});
 
-                @Override
-                public void onClick(View v) {
-                    clickCount++;
-                    if (clickCount == 1) {
-                        handler.postDelayed(() -> {
-                            if (clickCount == 1) listener.onHabitClick(habit);
-                            clickCount = 0;
-                        }, 300);
-                    } else if (clickCount == 2) {
-                        handler.removeCallbacksAndMessages(null);
-                        clickCount = 0;
-                        listener.onHabitDoubleClick(habit);
-                    }
+            h.itemView.setOnLongClickListener(v -> {
+                int prev = editModePosition;
+                editModePosition = (editModePosition == position) ? -1 : position;
+                if (prev != -1) notifyItemChanged(prev);
+                notifyItemChanged(position);
+                return true;
+            });
+
+            h.itemView.setOnClickListener(v -> {
+                if (editModePosition != -1) {
+                    int prev = editModePosition;
+                    editModePosition = -1;
+                    notifyItemChanged(prev);
                 }
+            });
+
+            h.buttonEdit.setOnClickListener(v -> {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                listener.onEdit(habit);
+            });
+
+            h.buttonDelete.setOnClickListener(v -> {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                listener.onDelete(habit);
+            });
+
+            h.buttonMoveUp.setOnClickListener(v -> {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                listener.onMoveUp(h.getAdapterPosition());
+            });
+
+            h.buttonMoveDown.setOnClickListener(v -> {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                listener.onMoveDown(h.getAdapterPosition());
             });
         }
     }
@@ -155,11 +187,22 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView textViewName;
         TextView textViewVisualType;
         View colorIndicator;
+        View habitEditView;
+        TextView buttonMoveUp;
+        TextView buttonMoveDown;
+        TextView buttonEdit;
+        TextView buttonDelete;
+
         HabitViewHolder(View itemView) {
             super(itemView);
             textViewName = itemView.findViewById(R.id.textViewHabitName);
             textViewVisualType = itemView.findViewById(R.id.textViewVisualType);
             colorIndicator = itemView.findViewById(R.id.colorIndicator);
+            habitEditView = itemView.findViewById(R.id.habitEditView);
+            buttonMoveUp = itemView.findViewById(R.id.buttonMoveUp);
+            buttonMoveDown = itemView.findViewById(R.id.buttonMoveDown);
+            buttonEdit = itemView.findViewById(R.id.buttonEditHabit);
+            buttonDelete = itemView.findViewById(R.id.buttonDeleteHabit);
         }
     }
 }

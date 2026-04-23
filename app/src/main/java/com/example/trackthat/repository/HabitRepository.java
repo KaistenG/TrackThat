@@ -3,12 +3,14 @@ package com.example.trackthat.repository;
 import com.example.trackthat.model.Habit;
 import com.example.trackthat.model.HabitEntry;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import com.google.firebase.firestore.PersistentCacheSettings;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.List;
 
@@ -102,22 +104,6 @@ public class HabitRepository {
                     } else {
                         listener.onLoaded(null);
                     }
-                })
-                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
-    }
-
-    public void getMoodsForMonth(String yearMonth, OnMoodsLoadedListener listener) {
-        db.collection("users").document(getUserId())
-                .collection("moods")
-                .whereGreaterThanOrEqualTo(com.google.firebase.firestore.FieldPath.documentId(), yearMonth + "-01")
-                .whereLessThanOrEqualTo(com.google.firebase.firestore.FieldPath.documentId(), yearMonth + "-31")
-                .get()
-                .addOnSuccessListener(query -> {
-                    java.util.Map<String, String> moods = new java.util.HashMap<>();
-                    for (com.google.firebase.firestore.DocumentSnapshot doc : query.getDocuments()) {
-                        moods.put(doc.getId(), (String) doc.get("color"));
-                    }
-                    listener.onLoaded(moods);
                 })
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
