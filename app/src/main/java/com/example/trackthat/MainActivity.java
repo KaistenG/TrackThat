@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Kalender als Startansicht
         showFragment(new CalendarFragment());
+        new android.os.Handler().post(() -> resetNavigation());
 
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
@@ -94,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
         bottomNav.getMenu().findItem(R.id.nav_options).setTitle("Optionen");
         bottomNav.getMenu().findItem(R.id.nav_options).setIcon(android.R.drawable.ic_menu_preferences);
+        bottomNav.getMenu().setGroupCheckable(0, true, false);
+        for (int i = 0; i < bottomNav.getMenu().size(); i++) {
+            bottomNav.getMenu().getItem(i).setChecked(false);
+        }
+        bottomNav.getMenu().setGroupCheckable(0, true, true);
     }
 
     public void navigateToFragment(Fragment fragment) {

@@ -62,7 +62,7 @@ public class CalendarView extends View {
         super.onDraw(canvas);
 
         // Wochentag-Header zeichnen
-        paint.setTextSize(26);
+        paint.setTextSize(48);
         paint.setTypeface(Typeface.DEFAULT_BOLD);
         for (int i = 0; i < columns; i++) {
             int x = i * cellSize;
@@ -145,11 +145,11 @@ public class CalendarView extends View {
 
             // Tageszahl zuletzt zeichnen (über den Streifen)
             paint.setColor(0xFF333333);
-            paint.setTextSize(24);
+            paint.setTextSize(36);
             paint.setTypeface(Typeface.DEFAULT);
             String dayStr = String.valueOf(day);
             float textWidth = paint.measureText(dayStr);
-            canvas.drawText(dayStr, x + cellSize - textWidth - 8, y + 28, paint);
+            canvas.drawText(dayStr, x + cellSize - textWidth - 8, y + cellSize - 8, paint);
         }
     }
 
