@@ -48,6 +48,15 @@ public class DayPreviewView extends View {
         int verticalIndex = 0;
         int horizontalIndex = 0;
 
+        // Tagesstimmung als dezenter Hintergrund zuerst
+        if (moodColor != null && !moodColor.isEmpty()) {
+            paint.setStyle(Paint.Style.FILL);
+            paint.setColor(android.graphics.Color.parseColor(moodColor));
+            paint.setAlpha(60);
+            canvas.drawRect(0, 0, w, h, paint);
+            paint.setAlpha(255);
+        }
+
         for (Habit habit : allHabits) {
             boolean isActive = false;
             for (Habit active : activeHabits) {
@@ -56,7 +65,6 @@ public class DayPreviewView extends View {
                     break;
                 }
             }
-
 
             if (!isActive) {
                 if (habit.getVisualType().equals("VERTICAL")) verticalIndex++;
@@ -79,15 +87,6 @@ public class DayPreviewView extends View {
                     horizontalIndex++;
                     break;
             }
-
-        }
-        // Tagesstimmung als Border zeichnen
-        if (moodColor != null && !moodColor.isEmpty()) {
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setColor(android.graphics.Color.parseColor(moodColor));
-            paint.setStrokeWidth(12);
-            canvas.drawRect(4, 4, w - 4, h - 4, paint);
-            paint.setStyle(Paint.Style.FILL);
         }
     }
 }
