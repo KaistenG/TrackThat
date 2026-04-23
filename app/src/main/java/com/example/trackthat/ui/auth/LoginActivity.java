@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.trackthat.MainActivity;
 import com.example.trackthat.R;
 import com.google.firebase.auth.FirebaseAuth;
-
+import androidx.appcompat.app.AppCompatDelegate;
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth auth;
@@ -20,6 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 

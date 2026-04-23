@@ -3,6 +3,7 @@ package com.example.trackthat;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 
 import com.example.trackthat.repository.HabitRepository;
@@ -12,6 +13,7 @@ import com.example.trackthat.ui.stats.StatsFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import com.example.trackthat.ui.options.OptionsFragment;
+import androidx.appcompat.app.AppCompatDelegate;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

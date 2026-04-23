@@ -67,7 +67,7 @@ public class CalendarView extends View {
         paint.setTypeface(Typeface.DEFAULT_BOLD);
         for (int i = 0; i < columns; i++) {
             int x = i * cellSize;
-            paint.setColor(0xFF888888);
+            paint.setColor(0xFFAAAAAA);
             float textWidth = paint.measureText(dayLabels[i]);
             canvas.drawText(dayLabels[i], x + (cellSize - textWidth) / 2, headerHeight - 8, paint);
         }
@@ -95,8 +95,18 @@ public class CalendarView extends View {
                     && today.get(Calendar.DAY_OF_MONTH) == day;
 
             paint.setTypeface(Typeface.DEFAULT);
-            paint.setColor(isToday ? 0xFFD1C4E9 : 0xFFEEEEEE);
+            paint.setColor(isToday ? 0xFF3700B3 : 0xFF2C2C2C);
             canvas.drawRect(x + 2, y + 2, x + cellSize - 2, y + cellSize - 2, paint);
+
+            // Tagesstimmung als Hintergrund
+            String moodColor = moodsPerDay.get(String.valueOf(day));
+            if (moodColor != null && !moodColor.isEmpty()) {
+                paint.setStyle(Paint.Style.FILL);
+                paint.setColor(android.graphics.Color.parseColor(moodColor));
+                paint.setAlpha(30); // sehr dezent, 0-255
+                canvas.drawRect(x + 2, y + 2, x + cellSize - 2, y + cellSize - 2, paint);
+                paint.setAlpha(255); // Alpha zurücksetzen
+            }
 
             // Streifen zeichnen
             String dayKey = String.valueOf(day);
@@ -143,18 +153,9 @@ public class CalendarView extends View {
                         break;
                 }
             }
-            // Tagesstimmung als Border zeichnen
-            String moodColor = moodsPerDay.get(String.valueOf(day));
-            if (moodColor != null && !moodColor.isEmpty()) {
-                paint.setStyle(Paint.Style.STROKE);
-                paint.setColor(android.graphics.Color.parseColor(moodColor));
-                paint.setStrokeWidth(6);
-                canvas.drawRect(x + 3, y + 3, x + cellSize - 3, y + cellSize - 3, paint);
-                paint.setStyle(Paint.Style.FILL);
-            }
 
             // Tageszahl zuletzt zeichnen (über den Streifen)
-            paint.setColor(0xFF333333);
+            paint.setColor(0xFFFFFFFF);
             paint.setTextSize(36);
             paint.setTypeface(Typeface.DEFAULT);
             String dayStr = String.valueOf(day);
