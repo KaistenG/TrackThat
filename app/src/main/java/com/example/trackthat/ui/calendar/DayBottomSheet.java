@@ -38,6 +38,8 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
 
     private TextView buttonClearAll;
     private String dateString;
+    private String currentMoodColor = null;
+    private View lastSelectedMood = null;
 
     public static DayBottomSheet newInstance(int year, int month, int day) {
         DayBottomSheet sheet = new DayBottomSheet();
@@ -73,6 +75,7 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
         dateLabel.setText(day + "." + (month + 1) + "." + year);
 
         dayPreviewView = view.findViewById(R.id.dayPreviewView);
+        setupMoodSelector(view);
 
         buttonClearAll = view.findViewById(R.id.buttonClearAll);
         buttonClearAll.setOnClickListener(v -> {
@@ -185,6 +188,7 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
         Collections.sort(sortedAllHabits, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
         dayPreviewView.setAllHabits(sortedAllHabits);
         dayPreviewView.setActiveHabits(activeHabits);
+        dayPreviewView.setMoodColor(currentMoodColor);
         updateClearButton();
     }
     private void updateClearButton() {
@@ -192,6 +196,64 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
             buttonClearAll.setTextColor(0xFFCCCCCC);
         } else {
             buttonClearAll.setTextColor(0xFFE53935);
+        }
+    }
+    private void setupMoodSelector(View view) {
+        int[] moodIds = {R.id.moodRed, R.id.moodOrange, R.id.moodYellow, R.id.moodLightGreen, R.id.moodGreen};
+        String[] moodColors = {"#F44336", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"};
+
+        // Aktuelle Stimmung laden
+        repository.getDayMood(dateString, new HabitRepository.OnMoodLoadedListener() {
+            @Override
+            public void onLoaded(String color) {
+                if (color != null) {
+                    currentMoodColor = color;
+                    for (int i = 0; i < moodColors.length; i++) {
+                        if (moodColors[i].equals(color)) {
+                            View moodView = view.findViewById(moodIds[i]);
+                            moodView.setScaleX(1.3f);
+                            moodView.setScaleY(1.3f);
+                            lastSelectedMood = moodView;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(String error) {}
+        });
+
+        // Click-Listener für jeden Mood-Button
+        for (int i = 0; i < moodIds.length; i++) {
+            final String moodColor = moodColors[i];
+            View moodView = view.findViewById(moodIds[i]);
+            moodView.setOnClickListener(v -> {
+                if (lastSelectedMood != null) {
+                    lastSelectedMood.setScaleX(1.0f);
+                    lastSelectedMood.setScaleY(1.0f);
+                }
+                if (lastSelectedMood == v) {
+                    currentMoodColor = null;
+                    lastSelectedMood = null;
+                    dayPreviewView.setMoodColor(null);
+                } else {
+                    v.setScaleX(1.3f);
+                    v.setScaleY(1.3f);
+                    lastSelectedMood = v;
+                    currentMoodColor = moodColor;
+                    dayPreviewView.setMoodColor(moodColor);
+                }
+
+                repository.setDayMood(dateString, currentMoodColor != null ? currentMoodColor : "",
+                        new HabitRepository.OnSuccessListener() {
+                            @Override
+                            public void onSuccess() {}
+
+                            @Override
+                            public void onFailure(String error) {}
+                        });
+            });
         }
     }
 }

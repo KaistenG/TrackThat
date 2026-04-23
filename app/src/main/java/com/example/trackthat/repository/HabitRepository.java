@@ -83,6 +83,46 @@ public class HabitRepository {
                 .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
     }
 
+    public void setDayMood(String date, String color, OnSuccessListener listener) {
+        db.collection("users").document(getUserId())
+                .collection("moods")
+                .document(date)
+                .set(new java.util.HashMap<String, Object>() {{ put("color", color); }})
+                .addOnSuccessListener(unused -> listener.onSuccess())
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    public void getDayMood(String date, OnMoodLoadedListener listener) {
+        db.collection("users").document(getUserId())
+                .collection("moods")
+                .document(date)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        listener.onLoaded((String) doc.get("color"));
+                    } else {
+                        listener.onLoaded(null);
+                    }
+                })
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
+    public void getMoodsForMonth(String yearMonth, OnMoodsLoadedListener listener) {
+        db.collection("users").document(getUserId())
+                .collection("moods")
+                .whereGreaterThanOrEqualTo(com.google.firebase.firestore.FieldPath.documentId(), yearMonth + "-01")
+                .whereLessThanOrEqualTo(com.google.firebase.firestore.FieldPath.documentId(), yearMonth + "-31")
+                .get()
+                .addOnSuccessListener(query -> {
+                    java.util.Map<String, String> moods = new java.util.HashMap<>();
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : query.getDocuments()) {
+                        moods.put(doc.getId(), (String) doc.get("color"));
+                    }
+                    listener.onLoaded(moods);
+                })
+                .addOnFailureListener(e -> listener.onFailure(e.getMessage()));
+    }
+
     // Entries
     public void toggleEntry(String habitId, String date, OnSuccessListener listener) {
         db.collection("users").document(getUserId())
@@ -186,6 +226,20 @@ public class HabitRepository {
                     listener.onLoaded(query.toObjects(HabitEntry.class));
                 });
     }
+    public ListenerRegistration listenToMoodsForMonth(String yearMonth, OnMoodsLoadedListener listener) {
+        return db.collection("users").document(getUserId())
+                .collection("moods")
+                .whereGreaterThanOrEqualTo(com.google.firebase.firestore.FieldPath.documentId(), yearMonth + "-01")
+                .whereLessThanOrEqualTo(com.google.firebase.firestore.FieldPath.documentId(), yearMonth + "-31")
+                .addSnapshotListener((query, error) -> {
+                    if (error != null || query == null) return;
+                    java.util.Map<String, String> moods = new java.util.HashMap<>();
+                    for (com.google.firebase.firestore.DocumentSnapshot doc : query.getDocuments()) {
+                        moods.put(doc.getId(), (String) doc.get("color"));
+                    }
+                    listener.onLoaded(moods);
+                });
+    }
 
 
     // Interfaces
@@ -206,6 +260,16 @@ public class HabitRepository {
 
     public interface OnGroupsLoadedListener {
         void onLoaded(java.util.List<Group> groups);
+        void onFailure(String error);
+    }
+
+    public interface OnMoodLoadedListener {
+        void onLoaded(String color);
+        void onFailure(String error);
+    }
+
+    public interface OnMoodsLoadedListener {
+        void onLoaded(java.util.Map<String, String> moods);
         void onFailure(String error);
     }
 }

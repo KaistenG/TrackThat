@@ -85,13 +85,6 @@
                 android:text="Horizontaler Streifen"
                 android:padding="8dp"/>
 
-            <RadioButton
-                android:id="@+id/radioBorder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Umrandung"
-                android:padding="8dp"/>
-
         </RadioGroup>
 
         <TextView

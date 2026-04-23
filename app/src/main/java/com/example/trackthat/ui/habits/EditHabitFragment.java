@@ -171,7 +171,6 @@ public class EditHabitFragment extends Fragment {
         RadioGroup radioGroup = view.findViewById(R.id.radioGroupVisualType);
         switch (habit.getVisualType()) {
             case "HORIZONTAL": radioGroup.check(R.id.radioHorizontal); break;
-            case "BORDER": radioGroup.check(R.id.radioBorder); break;
             default: radioGroup.check(R.id.radioVertical); break;
         }
 
@@ -213,7 +212,6 @@ public class EditHabitFragment extends Fragment {
         int checkedId = radioGroup.getCheckedRadioButtonId();
         String visualType;
         if (checkedId == R.id.radioHorizontal) visualType = "HORIZONTAL";
-        else if (checkedId == R.id.radioBorder) visualType = "BORDER";
         else visualType = "VERTICAL";
 
         CheckBox checkBox = view.findViewById(R.id.checkBoxStreakable);

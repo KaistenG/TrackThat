@@ -16,6 +16,7 @@ public class DayPreviewView extends View {
     private Paint paint;
     private List<Habit> activeHabits = new ArrayList<>();
     private List<Habit> allHabits = new ArrayList<>();
+    private String moodColor = null;
 
     public DayPreviewView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -30,6 +31,11 @@ public class DayPreviewView extends View {
 
     public void setAllHabits(List<Habit> allHabits) {
         this.allHabits = allHabits;
+        invalidate();
+    }
+
+    public void setMoodColor(String color) {
+        this.moodColor = color;
         invalidate();
     }
 
@@ -51,6 +57,7 @@ public class DayPreviewView extends View {
                 }
             }
 
+
             if (!isActive) {
                 if (habit.getVisualType().equals("VERTICAL")) verticalIndex++;
                 else if (habit.getVisualType().equals("HORIZONTAL")) horizontalIndex++;
@@ -71,14 +78,16 @@ public class DayPreviewView extends View {
                     canvas.drawRect(0, hY, w, hY + stripeWidth, paint);
                     horizontalIndex++;
                     break;
-                case "BORDER":
-                    paint.setStyle(Paint.Style.STROKE);
-                    paint.setColor(habit.getColor());
-                    paint.setStrokeWidth(12);
-                    canvas.drawRect(4, 4, w - 4, h - 4, paint);
-                    paint.setStyle(Paint.Style.FILL);
-                    break;
             }
+
+        }
+        // Tagesstimmung als Border zeichnen
+        if (moodColor != null && !moodColor.isEmpty()) {
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setColor(android.graphics.Color.parseColor(moodColor));
+            paint.setStrokeWidth(12);
+            canvas.drawRect(4, 4, w - 4, h - 4, paint);
+            paint.setStyle(Paint.Style.FILL);
         }
     }
 }

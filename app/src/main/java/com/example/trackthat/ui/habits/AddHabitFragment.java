@@ -132,7 +132,6 @@ public class AddHabitFragment extends Fragment {
         int checkedId = radioGroup.getCheckedRadioButtonId();
         String visualType;
         if (checkedId == R.id.radioHorizontal) visualType = "HORIZONTAL";
-        else if (checkedId == R.id.radioBorder) visualType = "BORDER";
         else visualType = "VERTICAL";
 
         CheckBox checkBox = view.findViewById(R.id.checkBoxStreakable);

@@ -32,6 +32,7 @@ public class CalendarView extends View {
 
     private List<Habit> habits = new ArrayList<>();
     private Map<String, List<Habit>> activeHabitsPerDay = new HashMap<>();
+    private Map<String, String> moodsPerDay = new HashMap<>();
 
     public CalendarView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -142,6 +143,15 @@ public class CalendarView extends View {
                         break;
                 }
             }
+            // Tagesstimmung als Border zeichnen
+            String moodColor = moodsPerDay.get(String.valueOf(day));
+            if (moodColor != null && !moodColor.isEmpty()) {
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setColor(android.graphics.Color.parseColor(moodColor));
+                paint.setStrokeWidth(6);
+                canvas.drawRect(x + 3, y + 3, x + cellSize - 3, y + cellSize - 3, paint);
+                paint.setStyle(Paint.Style.FILL);
+            }
 
             // Tageszahl zuletzt zeichnen (über den Streifen)
             paint.setColor(0xFF333333);
@@ -229,5 +239,8 @@ public class CalendarView extends View {
         }
         invalidate();
     }
-
+    public void setMoodsData(Map<String, String> moods) {
+        this.moodsPerDay = moods;
+        invalidate();
+    }
 }

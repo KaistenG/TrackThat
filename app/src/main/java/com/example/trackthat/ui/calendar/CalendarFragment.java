@@ -36,6 +36,7 @@ public class CalendarFragment extends Fragment {
 
     private ListenerRegistration habitsListener;
     private ListenerRegistration entriesListener;
+    private ListenerRegistration moodsListener;
     private List<Habit> currentHabits = new ArrayList<>();
 
     @Nullable
@@ -122,6 +123,22 @@ public class CalendarFragment extends Fragment {
                     @Override
                     public void onLoaded(List<HabitEntry> entries) {
                         calendarView.setMonthData(currentHabits, entries);
+                        // Moods laden
+                        if (moodsListener != null) moodsListener.remove();
+                        moodsListener = repository.listenToMoodsForMonth(yearMonth, new HabitRepository.OnMoodsLoadedListener() {
+                            @Override
+                            public void onLoaded(java.util.Map<String, String> moods) {
+                                java.util.Map<String, String> moodsByDay = new java.util.HashMap<>();
+                                for (java.util.Map.Entry<String, String> entry : moods.entrySet()) {
+                                    String day = String.valueOf(Integer.parseInt(entry.getKey().substring(8)));
+                                    moodsByDay.put(day, entry.getValue());
+                                }
+                                calendarView.setMoodsData(moodsByDay);
+                            }
+
+                            @Override
+                            public void onFailure(String error) {}
+                        });
                     }
 
                     @Override
@@ -138,5 +155,6 @@ public class CalendarFragment extends Fragment {
         super.onDestroyView();
         if (habitsListener != null) habitsListener.remove();
         if (entriesListener != null) entriesListener.remove();
+        if (moodsListener != null) moodsListener.remove();
     }
 }
