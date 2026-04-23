@@ -76,20 +76,26 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
         buttonClearAll = view.findViewById(R.id.buttonClearAll);
         buttonClearAll.setOnClickListener(v -> {
             if (activeHabitIds.isEmpty()) return;
-            for (String habitId : new ArrayList<>(activeHabitIds)) {
-                repository.toggleEntry(habitId, dateString, new HabitRepository.OnSuccessListener() {
-                    @Override
-                    public void onSuccess() {
-                        activeHabitIds.remove(habitId);
-                        adapter.setActiveHabitIds(activeHabitIds);
-                        updateClearButton();
-                        updatePreview();
-                    }
-
-                    @Override
-                    public void onFailure(String error) {}
-                });
-            }
+            new android.app.AlertDialog.Builder(getContext())
+                    .setTitle("Alles löschen")
+                    .setMessage("Möchtest du wirklich alle Einträge für diesen Tag löschen?")
+                    .setPositiveButton("Löschen", (dialog, which) -> {
+                        for (String habitId : new ArrayList<>(activeHabitIds)) {
+                            repository.toggleEntry(habitId, dateString, new HabitRepository.OnSuccessListener() {
+                                @Override
+                                public void onSuccess() {
+                                    activeHabitIds.remove(habitId);
+                                    adapter.setActiveHabitIds(activeHabitIds);
+                                    updateClearButton();
+                                    updatePreview();
+                                }
+                                @Override
+                                public void onFailure(String error) {}
+                            });
+                        }
+                    })
+                    .setNegativeButton("Abbrechen", null)
+                    .show();
         });
 
         adapter = new HabitToggleAdapter((habit, isActive) -> {
