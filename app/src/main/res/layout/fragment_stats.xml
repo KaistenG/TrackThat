@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#0D1117"
     android:padding="16dp">
 
     <TextView
@@ -10,46 +11,62 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginBottom="12dp"
-        android:background="#FFEEEEEE"
+        android:background="@drawable/habit_table_bg"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:text="📅 Aktueller Monat"
+        android:text="Aktueller Monat"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:drawableStart="@drawable/ic_calendar"
+        android:drawablePadding="12dp"
+        android:drawableTint="#BB86FC"/>
 
     <TextView
         android:id="@+id/cardAverage"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginBottom="12dp"
-        android:background="#FFEEEEEE"
+        android:background="@drawable/habit_table_bg"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:text="📊 Durchschnittsmonat"
+        android:text="Durchschnittsmonat"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:drawableStart="@drawable/ic_average"
+        android:drawablePadding="12dp"
+        android:drawableTint="#BB86FC"/>/>
 
     <TextView
         android:id="@+id/cardTopMonth"
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_marginBottom="12dp"
-        android:background="#FFEEEEEE"
+        android:background="@drawable/habit_table_bg"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:text="🏆 Topmonat"
+        android:text="Topmonat"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:drawableStart="@drawable/ic_topmonth"
+        android:drawablePadding="12dp"
+        android:drawableTint="#BB86FC"/>/>
 
     <TextView
         android:id="@+id/cardStreaks"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#FFEEEEEE"
+        android:background="@drawable/habit_table_bg"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:text="🔥 Streaks"
+        android:text="Streaks"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:drawableStart="@drawable/ic_streak"
+        android:drawablePadding="12dp"
+        android:drawableTint="#BB86FC"/>/>
 
 </LinearLayout>

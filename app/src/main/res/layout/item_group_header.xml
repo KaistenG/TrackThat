@@ -5,17 +5,22 @@
     android:orientation="horizontal"
     android:gravity="center_vertical"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp"
-    android:paddingTop="16dp"
+    android:paddingEnd="6dp"
+    android:paddingTop="6dp"
     android:paddingBottom="8dp">
 
     <TextView
         android:id="@+id/textViewGroupName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="#FF888888"
+        android:textColor="#FFFFFF"
         android:textAllCaps="true"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#888888"/>
 
 </LinearLayout>

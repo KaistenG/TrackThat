@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getWindow().setStatusBarColor(0xFF0D1117);
 
         bottomNav = findViewById(R.id.bottomNavigation);
 
@@ -43,11 +44,11 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     showFragment(new HabitsFragment());
                     bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Zurück");
-                    bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_media_previous);
+                    bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(R.drawable.ic_back_button);
                     bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Statistiken");
-                    bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_menu_report_image);
+                    bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(R.drawable.ic_stats);
                     bottomNav.getMenu().findItem(R.id.nav_options).setTitle("Optionen");
-                    bottomNav.getMenu().findItem(R.id.nav_options).setIcon(android.R.drawable.ic_menu_preferences);
+                    bottomNav.getMenu().findItem(R.id.nav_options).setIcon(R.drawable.ic_options);
                     return true;
                 }
             } else if (id == R.id.nav_stats) {
@@ -58,11 +59,11 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     showFragment(new StatsFragment());
                     bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Zurück");
-                    bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_media_previous);
+                    bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(R.drawable.ic_back_button);
                     bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
-                    bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
+                    bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(R.drawable.ic_habits);
                     bottomNav.getMenu().findItem(R.id.nav_options).setTitle("Optionen");
-                    bottomNav.getMenu().findItem(R.id.nav_options).setIcon(android.R.drawable.ic_menu_preferences);
+                    bottomNav.getMenu().findItem(R.id.nav_options).setIcon(R.drawable.ic_options);
                     return true;
                 }
             } else if (id == R.id.nav_options) {
@@ -73,11 +74,11 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     showFragment(new OptionsFragment());
                     bottomNav.getMenu().findItem(R.id.nav_options).setTitle("Zurück");
-                    bottomNav.getMenu().findItem(R.id.nav_options).setIcon(android.R.drawable.ic_media_previous);
+                    bottomNav.getMenu().findItem(R.id.nav_options).setIcon(R.drawable.ic_back_button);
                     bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
-                    bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
+                    bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(R.drawable.ic_habits);
                     bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Statistiken");
-                    bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_menu_report_image);
+                    bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(R.drawable.ic_stats);
                     return true;
                 }
             }
@@ -94,11 +95,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void resetNavigation() {
         bottomNav.getMenu().findItem(R.id.nav_stats).setTitle("Statistiken");
-        bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(android.R.drawable.ic_menu_report_image);
+        bottomNav.getMenu().findItem(R.id.nav_stats).setIcon(R.drawable.ic_stats);
         bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Gewohnheiten");
-        bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_menu_edit);
+        bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(R.drawable.ic_habits);
         bottomNav.getMenu().findItem(R.id.nav_options).setTitle("Optionen");
-        bottomNav.getMenu().findItem(R.id.nav_options).setIcon(android.R.drawable.ic_menu_preferences);
+        bottomNav.getMenu().findItem(R.id.nav_options).setIcon(R.drawable.ic_options);
         bottomNav.getMenu().setGroupCheckable(0, true, false);
         for (int i = 0; i < bottomNav.getMenu().size(); i++) {
             bottomNav.getMenu().getItem(i).setChecked(false);
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                 .addToBackStack(null)
                 .commit();
         bottomNav.getMenu().findItem(R.id.nav_habits).setTitle("Zurück");
-        bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(android.R.drawable.ic_media_previous);
+        bottomNav.getMenu().findItem(R.id.nav_habits).setIcon(R.drawable.ic_back_button);
     }
     @Override
     public void onBackPressed() {

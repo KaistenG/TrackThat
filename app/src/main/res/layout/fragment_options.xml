@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#0D1117"
     android:padding="16dp">
 
     <TextView
@@ -11,39 +12,51 @@
         android:text="Optionen"
         android:textSize="22sp"
         android:textStyle="bold"
+        android:textColor="#FFFFFF"
         android:layout_marginBottom="24dp"/>
 
     <TextView
         android:id="@+id/buttonHowTo"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#FFEEEEEE"
+        android:background="@drawable/habit_table_bg"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:text="📖 Anleitung"
+        android:text="Anleitung"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="12dp"
+        android:drawableStart="@drawable/ic_help"
+        android:drawablePadding="12dp"
+        android:drawableTint="#BB86FC"/>
 
     <TextView
         android:id="@+id/buttonImprint"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#FFEEEEEE"
+        android:background="@drawable/habit_table_bg"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:text="📄 Impressum"
+        android:text="Impressum"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="12dp"
+        android:drawableStart="@drawable/ic_imprint"
+        android:drawablePadding="12dp"
+        android:drawableTint="#BB86FC"/>
 
     <TextView
         android:id="@+id/buttonLogout"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#FFEEEEEE"
+        android:background="@drawable/habit_table_bg"
         android:gravity="center_vertical"
         android:paddingStart="16dp"
-        android:text="🚪 Abmelden"
+        android:text="Abmelden"
         android:textSize="16sp"
-        android:textColor="#FFE53935"/>
+        android:textColor="#FFE53935"
+        android:drawableStart="@drawable/ic_logout"
+        android:drawablePadding="12dp"
+        android:drawableTint="#BB86FC"/>
 
 </LinearLayout>

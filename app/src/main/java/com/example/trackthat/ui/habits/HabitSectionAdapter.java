@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -49,26 +50,9 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void setHabits(List<Habit> habits) {
         items.clear();
         editModePosition = -1;
-
-        List<Habit> weeklies = new ArrayList<>();
-        List<Habit> dailies = new ArrayList<>();
-
-        for (Habit habit : habits) {
-            if (habit.getVisualType().equals("VERTICAL")) weeklies.add(habit);
-            else dailies.add(habit);
+        for (Habit h : habits) {
+            items.add(new ListItem(h));
         }
-        Collections.sort(weeklies, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
-        Collections.sort(dailies, (a, b) -> Integer.compare(a.getOrder(), b.getOrder()));
-
-        if (!weeklies.isEmpty()) {
-            items.add(new ListItem("Weekly"));
-            for (Habit h : weeklies) items.add(new ListItem(h));
-        }
-        if (!dailies.isEmpty()) {
-            items.add(new ListItem("Daily"));
-            for (Habit h : dailies) items.add(new ListItem(h));
-        }
-
         notifyDataSetChanged();
     }
 
@@ -123,8 +107,12 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             HabitViewHolder h = (HabitViewHolder) holder;
             boolean isEditMode = editModePosition == position;
 
+            // Divider verstecken wenn letztes Item oder nächstes Item ein Header ist
+            boolean isLastInSection = position == getItemCount() - 1
+                    || items.get(position + 1).header != null;
+            h.divider.setVisibility(isLastInSection ? View.GONE : View.VISIBLE);
+
             h.textViewName.setText(habit.getName());
-            h.textViewVisualType.setText(habit.getVisualType().equals("VERTICAL") ? "Weekly" : "Daily");
 
             GradientDrawable circle = new GradientDrawable();
             circle.setShape(GradientDrawable.OVAL);
@@ -188,10 +176,12 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView textViewVisualType;
         View colorIndicator;
         View habitEditView;
-        TextView buttonMoveUp;
-        TextView buttonMoveDown;
-        TextView buttonEdit;
-        TextView buttonDelete;
+        ImageView buttonMoveUp;
+        ImageView buttonMoveDown;
+        ImageView buttonEdit;
+        ImageView buttonDelete;
+
+        View divider;
 
         HabitViewHolder(View itemView) {
             super(itemView);
@@ -203,6 +193,7 @@ public class HabitSectionAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             buttonMoveDown = itemView.findViewById(R.id.buttonMoveDown);
             buttonEdit = itemView.findViewById(R.id.buttonEditHabit);
             buttonDelete = itemView.findViewById(R.id.buttonDeleteHabit);
+            divider = itemView.findViewById(R.id.divider);
         }
     }
 }

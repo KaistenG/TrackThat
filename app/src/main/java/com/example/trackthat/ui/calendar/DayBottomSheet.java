@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,10 +33,10 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
     private DayPreviewView dayPreviewView;
     private List<Habit> allHabits = new ArrayList<>();
     private List<String> activeHabitIds = new ArrayList<>();
-    private TextView buttonClearAll;
     private String dateString;
     private String currentMoodColor = null;
     private View lastSelectedMood = null;
+    private ImageView buttonClearAll;
 
     public static DayBottomSheet newInstance(int year, int month, int day) {
         DayBottomSheet sheet = new DayBottomSheet();
@@ -186,14 +187,14 @@ public class DayBottomSheet extends BottomSheetDialogFragment {
     }
     private void updateClearButton() {
         if (activeHabitIds.isEmpty()) {
-            buttonClearAll.setTextColor(0xFFCCCCCC);
+            buttonClearAll.setColorFilter(0xFFCCCCCC);
         } else {
-            buttonClearAll.setTextColor(0xFFE53935);
+            buttonClearAll.setColorFilter(0xFFE53935);
         }
     }
     private void setupMoodSelector(View view) {
-        int[] moodIds = {R.id.moodRed, R.id.moodOrange, R.id.moodYellow, R.id.moodLightGreen, R.id.moodGreen};
-        String[] moodColors = {"#F44336", "#FF9800", "#FFEB3B", "#8BC34A", "#4CAF50"};
+        int[] moodIds = {R.id.moodRed, R.id.moodYellow, R.id.moodGreen};
+        String[] moodColors = {"#CC0000", "#CCCC00", "#00CC00"};
 
         // Aktuelle Stimmung laden
         repository.getDayMood(dateString, new HabitRepository.OnMoodLoadedListener() {

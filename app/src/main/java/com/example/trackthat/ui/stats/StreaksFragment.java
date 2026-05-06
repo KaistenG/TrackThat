@@ -86,7 +86,7 @@ public class StreaksFragment extends Fragment {
 
                             List<Date> dates = datesPerHabit.get(habit.getId());
                             if (dates == null || dates.isEmpty()) {
-                                items.add(new StatsAdapter.StatItem(habit, "🔥 0 Tage | Max: 0"));
+                                items.add(new StatsAdapter.StatItem(habit, "🔥 0 Tage | Max: 0", 0xFFFFFFFF));
                                 continue;
                             }
 
@@ -96,7 +96,7 @@ public class StreaksFragment extends Fragment {
                             int longestStreak = calculateLongestStreak(dates);
 
                             items.add(new StatsAdapter.StatItem(habit,
-                                    "🔥 " + currentStreak + " Tage | Max: " + longestStreak));
+                                    "🔥 " + currentStreak + " Tage | Max: " + longestStreak, 0xFFFFFFFF));
                         }
                         adapter.setItems(items);
                     }

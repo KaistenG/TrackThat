@@ -73,18 +73,18 @@
             android:rowCount="2"
             android:layout_marginBottom="24dp">
 
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF0000" android:tag="#FF0000"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF6600" android:tag="#FF6600"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FFFF00" android:tag="#FFFF00"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#00FF00" android:tag="#00FF00"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#00FFFF" android:tag="#00FFFF"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#0066FF" android:tag="#0066FF"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#9900FF" android:tag="#9900FF"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF00FF" android:tag="#FF00FF"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF0099" android:tag="#FF0099"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF3B3B" android:tag="#FF3B3B"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF6B00" android:tag="#FF6B00"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FFD000" android:tag="#FFD000"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#00E054" android:tag="#00E054"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#00DDDD" android:tag="#00DDDD"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#1A7FFF" android:tag="#1A7FFF"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#AA00FF" android:tag="#AA00FF"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF00CC" android:tag="#FF00CC"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF0077" android:tag="#FF0077"/>
             <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FFFFFF" android:tag="#FFFFFF"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF9900" android:tag="#FF9900"/>
-            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#00FF99" android:tag="#00FF99"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#FF9500" android:tag="#FF9500"/>
+            <View android:layout_width="40dp" android:layout_height="40dp" android:layout_margin="4dp" android:background="#00FF88" android:tag="#00FF88"/>
 
         </GridLayout>
 
@@ -96,11 +96,20 @@
             android:textSize="16sp"
             android:layout_marginBottom="24dp"/>
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/buttonSave"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Speichern"/>
+            android:layout_gravity="center_horizontal"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            android:text="Speichern"
+            android:textColor="#FFFFFF"
+            app:icon="@drawable/ic_save"
+            app:iconGravity="textStart"
+            app:iconTint="#FFFFFF"
+            app:backgroundTint="#3700B3"
+            style="@style/Widget.Material3.Button"/>
 
     </LinearLayout>
 

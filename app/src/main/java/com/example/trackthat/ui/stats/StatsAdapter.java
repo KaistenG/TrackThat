@@ -20,10 +20,12 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.ViewHolder> 
     public static class StatItem {
         public Habit habit;
         public String value;
+        public int valueColor;
 
-        public StatItem(Habit habit, String value) {
+        public StatItem(Habit habit, String value, int valueColor) {
             this.habit = habit;
             this.value = value;
+            this.valueColor = valueColor;
         }
     }
 
@@ -48,6 +50,9 @@ public class StatsAdapter extends RecyclerView.Adapter<StatsAdapter.ViewHolder> 
 
         holder.textViewName.setText(item.habit.getName());
         holder.textViewValue.setText(item.value);
+        holder.textViewValue.setTextColor(item.valueColor);
+        holder.textViewValue.setTypeface(null, android.graphics.Typeface.BOLD);
+        holder.textViewValue.setTextSize(14f);
 
         GradientDrawable circle = new GradientDrawable();
         circle.setShape(GradientDrawable.OVAL);

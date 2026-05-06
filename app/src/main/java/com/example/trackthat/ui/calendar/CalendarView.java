@@ -54,7 +54,7 @@ public class CalendarView extends View {
         cellSize = width / columns;
         headerHeight = cellSize / 2;
         int rows = 6;
-        int height = headerHeight + cellSize * rows;
+        int height = headerHeight + 16 + cellSize * rows;
         setMeasuredDimension(width, height);
     }
 
@@ -86,7 +86,8 @@ public class CalendarView extends View {
             int col = index % columns;
             int row = index / columns;
             int x = col * cellSize;
-            int y = headerHeight + row * cellSize;
+            int y = headerHeight + 16 + row * cellSize;
+
 
             // Zellhintergrund
             Calendar today = Calendar.getInstance();
@@ -95,7 +96,7 @@ public class CalendarView extends View {
                     && today.get(Calendar.DAY_OF_MONTH) == day;
 
             paint.setTypeface(Typeface.DEFAULT);
-            paint.setColor(isToday ? 0xFF3700B3 : 0xFF2C2C2C);
+            paint.setColor(isToday ? 0xFF3700B3 : 0xFF3A3A3A);
             canvas.drawRect(x + 2, y + 2, x + cellSize - 2, y + cellSize - 2, paint);
 
             // Tagesstimmung als Hintergrund
@@ -113,7 +114,7 @@ public class CalendarView extends View {
             List<Habit> dayActiveHabits = activeHabitsPerDay.containsKey(dayKey)
                     ? activeHabitsPerDay.get(dayKey) : new ArrayList<>();
 
-            int stripeWidth = (int) (cellSize * 0.06f);
+            int stripeWidth = (int) (cellSize * 0.03f);
             int verticalIndex = 0;
             int horizontalIndex = 0;
 

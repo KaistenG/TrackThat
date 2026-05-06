@@ -99,15 +99,17 @@ public class TopMonthFragment extends Fragment {
                             }
 
                             String value;
+                            int color;
                             if (topNormalized == 0) {
                                 value = currentCount + "x (kein Vergleich)";
+                                color = 0xFFAAAAAA;
                             } else {
                                 float diff = ((currentCount - topNormalized) / topNormalized) * 100;
                                 String sign = diff >= 0 ? "+" : "";
-                                value = currentCount + "x vs " + topMonthLabel + " (" + sign + Math.round(diff) + "%)";
+                                value = sign + Math.round(diff) + "% · " + topMonthLabel;
+                                color = diff >= 0 ? 0xFF4CAF50 : 0xFFE53935;
                             }
-
-                            items.add(new StatsAdapter.StatItem(habit, value));
+                            items.add(new StatsAdapter.StatItem(habit, value, color));
                         }
                         adapter.setItems(items);
                     }

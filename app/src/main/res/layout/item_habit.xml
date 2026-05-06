@@ -1,81 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:layout_height="38dp"
+    android:orientation="vertical">
 
-    <View
-        android:id="@+id/colorIndicator"
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:layout_marginEnd="16dp"/>
-
-    <TextView
-        android:id="@+id/textViewHabitName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:textSize="16sp"/>
-
-    <!-- Normal view -->
-    <TextView
-        android:id="@+id/textViewVisualType"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#FF888888"/>
-
-    <!-- Edit view -->
     <LinearLayout
-        android:id="@+id/habitEditView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:orientation="horizontal"
-        android:visibility="gone">
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <View
+            android:id="@+id/colorIndicator"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_marginEnd="16dp"/>
 
         <TextView
-            android:id="@+id/buttonMoveUp"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="↑"
-            android:textSize="18sp"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:id="@+id/textViewHabitName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textSize="16sp"/>
 
         <TextView
-            android:id="@+id/buttonMoveDown"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="↓"
-            android:textSize="18sp"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:id="@+id/textViewVisualType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="#FF888888"/>
 
-        <TextView
-            android:id="@+id/buttonEditHabit"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="✏️"
-            android:textSize="16sp"
-            android:clickable="true"
-            android:focusable="true"/>
+        <LinearLayout
+            android:id="@+id/habitEditView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/buttonDeleteHabit"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:gravity="center"
-            android:text="🗑️"
-            android:textSize="16sp"
-            android:clickable="true"
-            android:focusable="true"/>
+            <ImageView
+                android:id="@+id/buttonMoveUp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow_up"
+                app:tint="#BB86FC"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <ImageView
+                android:id="@+id/buttonMoveDown"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow_down"
+                app:tint="#BB86FC"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <ImageView
+                android:id="@+id/buttonEditHabit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_edit"
+                app:tint="#BB86FC"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <ImageView
+                android:id="@+id/buttonDeleteHabit"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:padding="8dp"
+                android:src="@drawable/ic_delete"
+                app:tint="#FFE53935"
+                android:clickable="true"
+                android:focusable="true"/>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#555555"/>
 
 </LinearLayout>

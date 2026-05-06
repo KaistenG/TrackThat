@@ -105,15 +105,17 @@ public class AverageMonthFragment extends Fragment {
                             }
 
                             String value;
+                            int color;
                             if (avgCount == 0) {
                                 value = currentCount + "x (kein Vergleich)";
+                                color = 0xFFAAAAAA;
                             } else {
                                 float diff = ((currentCount - avgCount) / avgCount) * 100;
                                 String sign = diff >= 0 ? "+" : "";
-                                value = currentCount + "x (" + sign + Math.round(diff) + "%)";
+                                value = sign + Math.round(diff) + "% · " + currentCount + "x";
+                                color = diff >= 0 ? 0xFF4CAF50 : 0xFFE53935;
                             }
-
-                            items.add(new StatsAdapter.StatItem(habit, value));
+                            items.add(new StatsAdapter.StatItem(habit, value, color));
                         }
                         adapter.setItems(items);
                     }

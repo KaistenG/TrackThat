@@ -74,7 +74,7 @@ public class CurrentMonthFragment extends Fragment {
                             for (HabitEntry entry : entries) {
                                 if (entry.getHabitId().equals(habit.getId())) count++;
                             }
-                            items.add(new StatsAdapter.StatItem(habit, count + "x"));
+                            items.add(new StatsAdapter.StatItem(habit, count + "x", 0xFFFFFFFF));
                         }
                         adapter.setItems(items);
                     }
